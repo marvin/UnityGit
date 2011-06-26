@@ -39,12 +39,7 @@ public class GitSystem : Editor
 	[MenuItem("Git/Test")]
 	static void TestFunc ()
 	{
-		string[] remotes = GetRemotesList();
-
-		Debug.Log(remotes.Length);
-		foreach ( string remote in remotes )
-			Debug.Log(remote);
-//		Debug.Log (RunGitCmd ("remote"));
+		Debug.Log (RunGitCmd ("ls-files --modified --exclude-standard"));
 	}
 
 
@@ -81,9 +76,7 @@ public class GitSystem : Editor
 				tryPath += locationParts[i] + "/";
 			}
 			
-			tryPath += ".git";
-			
-			if (Directory.Exists (tryPath)) {
+			if (Directory.Exists (tryPath + ".git")) {
 				return tryPath.Replace (@"\", @"/");
 			}
 		}
@@ -197,8 +190,9 @@ public class GitSystem : Editor
 
 	public static string[] GetUnmergedFilesList () {
 		string filesString = RunGitCmd ("ls-files --unmerged --exclude-standard");
+		string[] filesList = RemoveEmptyListEntries(filesString);
 		
-		return RemoveEmptyListEntries (filesString);
+		return FilterUsingSelection(filesList);
 	}
 
 	/* **** GetDeletedFilesList **** */
@@ -222,20 +216,35 @@ public class GitSystem : Editor
 	}
 
 
+	static string[] FilterUsingSelection(string[] files) {
+		string workingDirectory = "";
+
+		if ( Selection.activeObject != null ) {
+			workingDirectory = Application.dataPath;
+			workingDirectory = workingDirectory.Remove(workingDirectory.Length-6);
+			workingDirectory += AssetDatabase.GetAssetPath(Selection.activeObject) + "/";
+
+			Debug.Log(workingDirectory);
+		}
+
+		return files;
+	}
+
+
 	/* **** RunGitCmd **** */
 
 	public static string RunGitCmd (string command)
 	{
-//		string cmd = "\"C:\\Program Files\\Git\\bin\\git.exe\"";
 		string cmd = GetGitExePath();
+		string repoPath = GetRepoPath();
 
 		if ( cmd != "" ) {
 			Process proc = new Process ();
 			ProcessStartInfo startInfo = new ProcessStartInfo (cmd);
 			StreamReader streamReader;
 			string result;
-		
-			startInfo.Arguments = command;
+
+			startInfo.Arguments = "--git-dir=\"" + repoPath + ".git\" --work-tree=\"" + repoPath + "\" " + command;
 		
 			startInfo.UseShellExecute = false;
 			startInfo.RedirectStandardInput = true;
