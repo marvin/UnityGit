@@ -237,14 +237,15 @@ public class GitSystem : Editor
 	{
 		string cmd = GetGitExePath();
 		string repoPath = GetRepoPath();
-
+repoPath = repoPath.Remove(repoPath.Length-1);
+Debug.Log(repoPath);
 		if ( cmd != "" ) {
 			Process proc = new Process ();
 			ProcessStartInfo startInfo = new ProcessStartInfo (cmd);
 			StreamReader streamReader;
 			string result;
 
-			startInfo.Arguments = "--git-dir=\"" + repoPath + ".git\" --work-tree=\"" + repoPath + "\" " + command;
+			startInfo.Arguments = "--git-dir=\"" + repoPath + "/.git\" --work-tree=\"" + repoPath + "\" " + command;
 		
 			startInfo.UseShellExecute = false;
 			startInfo.RedirectStandardInput = true;
