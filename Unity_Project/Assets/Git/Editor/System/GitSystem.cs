@@ -71,15 +71,15 @@ public class GitSystem : Editor
 		string[] deletedFiles = GetDeletedFilesList ();
 		
 		foreach (string path in modifiedFiles) {
-			Debug.Log (RunGitCmd ("add \"" + path + "\""));
+			RunGitCmd ("add \"" + path + "\"");
 		}
 		
 		foreach (string path in untrackedFiles) {
-			Debug.Log (RunGitCmd ("add \"" + path + "\""));
+			RunGitCmd ("add \"" + path + "\"");
 		}
 		
 		foreach (string path in deletedFiles) {
-			Debug.Log (RunGitCmd ("rm \"" + path + "\""));
+			RunGitCmd ("rm \"" + path + "\"");
 		}
 		
 		Debug.LogWarning (RunGitCmd ("commit -m \"Commit from Unity!\""));
