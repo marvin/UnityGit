@@ -18,8 +18,7 @@ public class GitConflictsWindow : EditorWindow {
 	Dictionary<string, ConflictData> conflicts = new Dictionary<string, ConflictData>();
 
 
-	[MenuItem ("Git/Resolve Conflicts (Unmerged)")]
-	static void Init () {
+	public static void Init () {
 		Init(null);
 	}
 

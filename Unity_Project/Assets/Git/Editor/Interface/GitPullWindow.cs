@@ -10,8 +10,7 @@ public class GitPullWindow : EditorWindow {
 	int remoteSelection = 0;
 	string[] remotes;
 
-	[MenuItem ("Git/Pull")]
-	static void Init () {
+	public static void Init () {
 		// Get existing open window or if none, make a new one:
 		Instance = EditorWindow.GetWindow<GitPullWindow>(true, "Git Push");
 
