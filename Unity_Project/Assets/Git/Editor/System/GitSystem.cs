@@ -117,7 +117,7 @@ public class GitSystem : Editor
 			Debug.LogError("Error pulling!");
 		}
 		else
-			Debug.Log("Pull succesful: " + feedback);
+			Debug.Log("Pull successful: " + feedback);
 
 		unmergedFiles = GetUnmergedFilesList();
 
