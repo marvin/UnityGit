@@ -102,7 +102,7 @@ public class GitSystem : Editor
 	/* **** Push **** */
 
 	public static void Push(string remoteName) {
-		Debug.Log(RunGitCmd("push \"" + remoteName + "\""));
+		Debug.Log(RunGitCmd("push \"" + remoteName + "\"", false));
 	}
 
 
@@ -288,6 +288,12 @@ public class GitSystem : Editor
 
 	public static string RunGitCmd (string command)
 	{
+		return RunGitCmd(command, true);
+	}
+
+
+	public static string RunGitCmd (string command, bool includeGitDir)
+	{
 		string cmd = GetGitExePath();
 		string repoPath = GetRepoPath();
 
@@ -297,7 +303,10 @@ public class GitSystem : Editor
 			StreamReader streamReader;
 			string result;
 
-			startInfo.Arguments = "--git-dir=\"" + repoPath + "/.git\" --work-tree=\"" + repoPath + "\" " + command;
+			if ( includeGitDir )
+				command = "--git-dir=\"" + repoPath + "/.git\" --work-tree=\"" + repoPath + "\" " + command;
+
+			startInfo.Arguments = command;
 		
 			startInfo.UseShellExecute = false;
 			startInfo.RedirectStandardInput = true;
