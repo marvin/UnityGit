@@ -34,6 +34,13 @@ public class GitMenuCommands : MonoBehaviour {
 	}
 
 
+	/* **** Branching **** */
+
+	[MenuItem ("Git/Branching/Print Current Branch")]
+	static void GitCurrentBranch() {
+		print("Current branch: " + GitSystem.GetCurrentBranch() + "\n");
+	}
+
 	[MenuItem ("Git/Branching/Create Branch")]
 	static void GitCreateBranch() {
 		GitCreateBranchWindow.Init();
