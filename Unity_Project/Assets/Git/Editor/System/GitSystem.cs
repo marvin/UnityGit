@@ -102,7 +102,7 @@ public class GitSystem : Editor
 	/* **** Push **** */
 
 	public static void Push(string remoteName) {
-		Debug.Log(RunGitCmd("push \"" + remoteName + "\"", false));
+		Debug.Log(RunGitCmd("push " + remoteName + "", false));
 	}
 
 
