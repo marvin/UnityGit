@@ -34,6 +34,8 @@ public class GitMenuCommands : MonoBehaviour {
 	}
 
 
+	/* **** Branching **** */
+
 	[MenuItem ("Git/Branching/Create Branch")]
 	static void GitCreateBranch() {
 		GitCreateBranchWindow.Init();

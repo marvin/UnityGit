@@ -260,8 +260,14 @@ public class GitSystem : Editor
 
 
 	public static void CheckoutBranch(string branchName) {
-		if ( DoesBranchExist(branchName) )
-			RunGitCmd("checkout " + branchName);
+		if ( DoesBranchExist(branchName) ) {
+			string result = RunGitCmd("checkout " + branchName);
+
+			if (result.Contains ("Aborting")) {
+				Debug.LogError ("Branch checkout has been aborted.  Make sure you commit or stash your changes before checking out another branch.");
+				return;
+			}
+		}
 	}
 
 
