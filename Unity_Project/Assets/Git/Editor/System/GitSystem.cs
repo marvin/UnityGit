@@ -77,6 +77,7 @@ public class GitSystem : Editor
 			}
 			
 			if (Directory.Exists (tryPath + ".git")) {
+				tryPath = tryPath.Remove(tryPath.Length-1);
 				return tryPath.Replace (@"\", @"/");
 			}
 		}
@@ -237,8 +238,7 @@ public class GitSystem : Editor
 	{
 		string cmd = GetGitExePath();
 		string repoPath = GetRepoPath();
-repoPath = repoPath.Remove(repoPath.Length-1);
-Debug.Log(repoPath);
+
 		if ( cmd != "" ) {
 			Process proc = new Process ();
 			ProcessStartInfo startInfo = new ProcessStartInfo (cmd);
