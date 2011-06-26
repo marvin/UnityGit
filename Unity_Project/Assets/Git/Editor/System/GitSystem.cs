@@ -102,7 +102,7 @@ public class GitSystem : Editor
 	/* **** Push **** */
 
 	public static void Push(string remoteName) {
-		Debug.Log(RunGitCmd("push --verbose --progress \"" + remoteName + "\"", false));
+		Debug.Log(RunGitCmd("push --verbose --progress \"" + remoteName + "\" " + GetCurrentBranch(), false));
 	}
 
 
@@ -116,6 +116,8 @@ public class GitSystem : Editor
 			Debug.LogError(feedback);
 			Debug.LogError("Error pulling!");
 		}
+		else
+			Debug.Log(feedback);
 
 		unmergedFiles = GetUnmergedFilesList();
 

@@ -34,19 +34,19 @@ public class GitMenuCommands : MonoBehaviour {
 	}
 
 
-	[MenuItem ("Git/Create Branch")]
+	[MenuItem ("Git/Branching/Create Branch")]
 	static void GitCreateBranch() {
 		GitCreateBranchWindow.Init();
 	}
 
 
-	[MenuItem ("Git/Delete Branch")]
+	[MenuItem ("Git/Branching/Delete Branch")]
 	static void GitDeleteBranch() {
 		GitDeleteBranchWindow.Init();
 	}
 
 
-	[MenuItem ("Git/Checkout Branch")]
+	[MenuItem ("Git/Branching/Checkout Branch")]
 	static void GitCheckoutBranch() {
 		GitCheckoutBranchWindow.Init();
 	}
