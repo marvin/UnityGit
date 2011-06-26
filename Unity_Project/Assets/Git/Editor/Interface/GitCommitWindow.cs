@@ -18,8 +18,7 @@ public class GitCommitWindow : EditorWindow {
 	string commitMessage = "";
 
 
-	[MenuItem ("Git/Commit")]
-	static void Init () {
+	public static void Init () {
 		int fileCount = 0;
 
 		// Get existing open window or if none, make a new one:

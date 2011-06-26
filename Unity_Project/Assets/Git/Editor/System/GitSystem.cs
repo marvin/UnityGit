@@ -43,28 +43,6 @@ public class GitSystem : Editor
 	}
 
 
-	[MenuItem("Git/Branch Test")]
-	static void BranchTestFunc ()
-	{
-		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch"));
-		
-		foreach (string branch in branches) {
-			if (!branch.Contains ("*")) {
-				string result = RunGitCmd ("checkout" + branch);
-				
-				if (result.ToLower ().Contains ("aborting")) {
-					Debug.LogError ("Branch switching has been aborted.  Make sure you commit or stash your changes before checking out another branch.");
-					return;
-				}
-				
-				break;
-			}
-		}
-		
-		Debug.Log (RunGitCmd ("branch"));
-	}
-
-
 	static string GetRepoPath ()
 	{
 		string[] locationParts = Application.dataPath.Split ('/');
@@ -86,8 +64,7 @@ public class GitSystem : Editor
 	}
 
 
-	[MenuItem("Git/Commit All")]
-	static void CommitAll ()
+	public static void CommitAll ()
 	{
 		string[] modifiedFiles = GetModifiedFilesList ();
 		string[] untrackedFiles = GetUntrackedFilesList ();
@@ -147,19 +124,6 @@ public class GitSystem : Editor
 	}
 
 
-	public static string GetCurrentBranch() {
-		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch"));
-		
-		foreach (string branch in branches) {
-			if (branch.Contains ("*")) {
-				return branch.Replace("*", "");
-			}
-		}
-
-		return "";
-	}
-
-
 	/* **** GetModifiedFilesList **** */
 
 	public static string[] GetModifiedFilesList ()
@@ -205,20 +169,6 @@ public class GitSystem : Editor
 		return RemoveEmptyListEntries(RunGitCmd("remote"));
 	}
 
-	/* **** Removes any empty strings (typically found at the end of the array) **** */
-
-	static string[] RemoveEmptyListEntries (string listString)
-	{
-		string[] items = listString.Split ('\n');
-		List<string> itemsList = new List<string> ();
-		
-		for (int i = 0; i < items.Length; i++)
-			if (Regex.Replace (items[i], "\\s+", "") != "")
-				itemsList.Add (items[i]);
-		
-		return itemsList.ToArray ();
-	}
-
 
 	/* **** Filters files based on a selected directory **** */
 
@@ -237,6 +187,100 @@ public class GitSystem : Editor
 		}
 
 		return files;
+	}
+
+
+	/* **** Removes any empty strings (typically found at the end of the array) **** */
+
+	static string[] RemoveEmptyListEntries (string listString)
+	{
+		string[] items = listString.Split ('\n');
+		List<string> itemsList = new List<string> ();
+		
+		for (int i = 0; i < items.Length; i++)
+			if (Regex.Replace (items[i], "\\s+", "") != "")
+				itemsList.Add (items[i]);
+		
+		return itemsList.ToArray ();
+	}
+
+
+	/* **** Branching **** */
+
+	public static string GetCurrentBranch() {
+		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch"));
+		
+		foreach (string branch in branches) {
+			if (branch.Contains ("*")) {
+				return branch.Replace("* ", "");
+			}
+		}
+
+		return "";
+	}
+
+
+	public static string[] GetBranchList() {
+		return GetBranchList(true);
+	}
+
+
+	public static string[] GetBranchList(bool includeMaster) {
+		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch"));
+		List<string> modifiedBranchList = new List<string>();
+
+		foreach ( string branch in branches ) {
+			string branchName = branch.Replace("*", "");
+
+			branchName = branchName.Replace(" ", "");
+
+			if ( includeMaster || branchName != "master" )
+				modifiedBranchList.Add(branchName);
+		}
+
+		return modifiedBranchList.ToArray();
+	}
+
+
+	public static void CreateBranch(string branchName) {
+		CreateBranch(branchName, true);
+	}
+
+
+	public static void CreateBranch(string branchName, bool checkoutAfterCreation) {
+		if ( !DoesBranchExist(branchName) ) {
+			RunGitCmd("branch " + branchName);
+
+			if ( checkoutAfterCreation )
+				CheckoutBranch(branchName);
+		}
+	}
+
+
+	public static void CheckoutBranch(string branchName) {
+		if ( DoesBranchExist(branchName) )
+			RunGitCmd("checkout " + branchName);
+	}
+
+
+	public static void DeleteBranch(string branchName, bool mustBeMerged) {
+		string removeFlag = mustBeMerged ? "-d" : "-D";
+
+		if ( DoesBranchExist(branchName) )
+			RunGitCmd("branch " + removeFlag + " " + branchName);
+	}
+
+
+	public static bool DoesBranchExist(string newBranchName) {
+		string[] branches = GetBranchList();
+
+		foreach ( string branch in branches ) {
+			if ( branch == newBranchName || branch == "* " + newBranchName ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 
