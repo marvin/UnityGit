@@ -102,14 +102,14 @@ public class GitSystem : Editor
 	/* **** Push **** */
 
 	public static void Push(string remoteName) {
-		Debug.Log(RunGitCmd("push " + remoteName + "", false));
+		Debug.Log(RunGitCmd("push --verbose --progress \"" + remoteName + "\"", false));
 	}
 
 
 	/* **** Pull **** */
 
 	public static void Pull(string remoteName) {
-		string feedback = RunGitCmd("pull -v --progress \"" + remoteName + "\" " + GetCurrentBranch());
+		string feedback = RunGitCmd("pull -verbose --progress \"" + remoteName + "\" " + GetCurrentBranch());
 		string[] unmergedFiles;
 
 		if ( feedback.Contains("Aborting") ) {
