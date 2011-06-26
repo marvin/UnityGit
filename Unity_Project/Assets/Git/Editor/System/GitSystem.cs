@@ -165,8 +165,9 @@ public class GitSystem : Editor
 	public static string[] GetModifiedFilesList ()
 	{
 		string filesString = RunGitCmd ("ls-files --modified --exclude-standard");
+		string[] filesList = RemoveEmptyListEntries(filesString);
 		
-		return RemoveEmptyListEntries (filesString);
+		return FilterUsingSelection(filesList);
 	}
 
 
@@ -175,8 +176,9 @@ public class GitSystem : Editor
 	public static string[] GetUntrackedFilesList ()
 	{
 		string filesString = RunGitCmd ("ls-files --other --exclude-standard");
+		string[] filesList = RemoveEmptyListEntries(filesString);
 		
-		return RemoveEmptyListEntries (filesString);
+		return FilterUsingSelection(filesList);
 	}
 
 
@@ -185,8 +187,9 @@ public class GitSystem : Editor
 	public static string[] GetDeletedFilesList ()
 	{
 		string filesString = RunGitCmd ("ls-files --deleted --exclude-standard");
+		string[] filesList = RemoveEmptyListEntries(filesString);
 		
-		return RemoveEmptyListEntries (filesString);
+		return FilterUsingSelection(filesList);
 	}
 
 	public static string[] GetUnmergedFilesList () {
@@ -217,15 +220,20 @@ public class GitSystem : Editor
 	}
 
 
+	/* **** Filters files based on a selected directory **** */
+
 	static string[] FilterUsingSelection(string[] files) {
-		string workingDirectory = "";
-
 		if ( Selection.activeObject != null ) {
-			workingDirectory = Application.dataPath;
-			workingDirectory = workingDirectory.Remove(workingDirectory.Length-6);
-			workingDirectory += AssetDatabase.GetAssetPath(Selection.activeObject) + "/";
+			List<string> filteredFiles = new List<string>();
+			string baseDirectory = AssetDatabase.GetAssetPath(Selection.activeObject);
 
-			Debug.Log(workingDirectory);
+			foreach ( string file in files ) {
+				if ( file.StartsWith(baseDirectory) ) {
+					filteredFiles.Add(file);
+				}
+			}
+
+			return filteredFiles.ToArray();
 		}
 
 		return files;
