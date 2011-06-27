@@ -24,6 +24,7 @@ public class GitCreateBranchWindow : EditorWindow {
 	void OnGUI() {
 		bool branchTaken = false;
 		Color defaultColor = GUI.contentColor;
+		bool enterPressed = (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Return)? true : false;
 
 		GUILayout.Label("Enter a name for the new branch:");
 
@@ -48,34 +49,11 @@ public class GitCreateBranchWindow : EditorWindow {
 
 		GUI.contentColor = defaultColor;
 
-		if ( GUILayout.Button("Create Branch", GUILayout.MaxWidth(100)) ) {
+		if ( enterPressed || GUILayout.Button("Create Branch", GUILayout.MaxWidth(100)) ) {
 			if ( !branchTaken ) {
 				GitSystem.CreateBranch(Regex.Replace(newBranchName, @"\s", "_"), checkoutAfterCreation);
 				Close();
 			}
 		}
-	}
-
-
-	static void BranchTestFunc ()
-	{
-/*		
-		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch"));
-		
-		foreach (string branch in branches) {
-			if (!branch.Contains ("*")) {
-				string result = RunGitCmd ("checkout" + branch);
-				
-				if (result.ToLower ().Contains ("aborting")) {
-					Debug.LogError ("Branch switching has been aborted.  Make sure you commit or stash your changes before checking out another branch.");
-					return;
-				}
-				
-				break;
-			}
-		}
-		
-		Debug.Log (RunGitCmd ("branch"));
-*/
 	}
 }
