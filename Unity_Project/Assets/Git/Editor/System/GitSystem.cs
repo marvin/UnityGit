@@ -102,7 +102,7 @@ public class GitSystem : Editor
 	/* **** Push **** */
 
 	public static void Push(string remoteName) {
-		Debug.Log(RunGitCmd("push --verbose \"" + remoteName + "\" " + GetCurrentBranch(), true));
+		Debug.Log(RunGitCmd("push --verbose " + remoteName + " " + GetCurrentBranch(), false));
 	}
 
 
