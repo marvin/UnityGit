@@ -36,26 +36,31 @@ public class GitMenuCommands : MonoBehaviour {
 
 	/* **** Branching **** */
 
-	[MenuItem ("Git/Branching/Print Current Branch")]
+	[MenuItem ("Git/Branching/Print Current")]
 	static void GitCurrentBranch() {
-		print("Current branch: " + GitSystem.GetCurrentBranch() + "\n");
+		Debug.Log("Current branch: " + GitSystem.GetCurrentBranch() + "\n");
 	}
 
-	[MenuItem ("Git/Branching/Create Branch")]
+	[MenuItem ("Git/Branching/Create")]
 	static void GitCreateBranch() {
 		GitCreateBranchWindow.Init();
 	}
 
 
-	[MenuItem ("Git/Branching/Delete Branch")]
+	[MenuItem ("Git/Branching/Merge")]
+	static void GitMergeBranch() {
+		GitMergeBranchWindow.Init();
+	}
+
+
+	[MenuItem ("Git/Branching/Delete")]
 	static void GitDeleteBranch() {
 		GitDeleteBranchWindow.Init();
 	}
 
 
-	[MenuItem ("Git/Branching/Checkout Branch")]
+	[MenuItem ("Git/Branching/Checkout")]
 	static void GitCheckoutBranch() {
 		GitCheckoutBranchWindow.Init();
-		AssetDatabase.Refresh();
 	}
 }

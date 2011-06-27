@@ -223,20 +223,30 @@ public class GitSystem : Editor
 
 
 	public static string[] GetBranchList() {
-		return GetBranchList(true);
+		return GetBranchList(true, true);
 	}
 
 
-	public static string[] GetBranchList(bool includeMaster) {
+	public static string[] GetBranchList(bool includeMaster, bool includeCurrent) {
 		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch"));
 		List<string> modifiedBranchList = new List<string>();
+		string currentBranch = GetCurrentBranch();
 
 		foreach ( string branch in branches ) {
 			string branchName = branch.Replace("*", "");
+			bool isMaster;
+			bool isCurrent;
 
 			branchName = branchName.Replace(" ", "");
 
-			if ( includeMaster || branchName != "master" )
+			isMaster = branchName == "master";
+			isCurrent = branchName == currentBranch;
+
+			if ( isMaster && !includeMaster )
+				continue;
+			else if ( isCurrent && !includeCurrent )
+				continue;
+			else
 				modifiedBranchList.Add(branchName);
 		}
 
@@ -271,11 +281,20 @@ public class GitSystem : Editor
 	}
 
 
+	public static void MergeBranch(string branchName) {
+		Debug.Log(RunGitCmd("merge " + branchName));
+	}
+
+
 	public static void DeleteBranch(string branchName, bool mustBeMerged) {
 		string removeFlag = mustBeMerged ? "-d" : "-D";
 
-		if ( DoesBranchExist(branchName) )
-			RunGitCmd("branch " + removeFlag + " " + branchName);
+		if ( DoesBranchExist(branchName) ) {
+			string result;
+
+			result = RunGitCmd("branch --verbose " + removeFlag + " " + branchName);
+			Debug.Log(result);
+		}
 	}
 
 

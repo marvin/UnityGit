@@ -44,9 +44,12 @@ public class GitCheckoutBranchWindow : EditorWindow {
 		else
 			GUILayout.Label("");
 
-		if ( GUILayout.Button("Checkout Branch", GUILayout.MaxWidth(125)) ) {
-			if ( !currentBranchSelected )
+		if ( GUILayout.Button("Checkout Branch", GUILayout.MaxWidth(125)) )
+		{
+			if ( !currentBranchSelected ) {
 				GitSystem.CheckoutBranch(branches[selection]);
+				Debug.Log("Current branch: " + GitSystem.GetCurrentBranch() + "\n");
+			}
 
 			Close();
 		}

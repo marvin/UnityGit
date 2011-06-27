@@ -5,17 +5,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-public class GitDeleteBranchWindow : EditorWindow {
-	public static GitDeleteBranchWindow Instance { get; private set; }
+public class GitMergeBranchWindow : EditorWindow {
+	public static GitMergeBranchWindow Instance { get; private set; }
 
 	int selection = 0;
-	bool deleteOnlyIfMerged = true;
 	string[] branches = null;
 
 
 	public static void Init () {
 		// Get existing open window or if none, make a new one:
-		Instance = EditorWindow.GetWindow<GitDeleteBranchWindow>(true, "Git Delete Branch");
+		Instance = EditorWindow.GetWindow<GitMergeBranchWindow>(true, "Git Merge Branch");
 
 		Instance.branches = GitSystem.GetBranchList(false, false);
 	}
@@ -25,12 +24,12 @@ public class GitDeleteBranchWindow : EditorWindow {
 		if ( branches.Length > 0 ) {
 			selection = EditorGUILayout.Popup(selection, branches);
 
-			if ( GUILayout.Button("Delete Branch", GUILayout.MaxWidth(100)) ) {
-				GitSystem.DeleteBranch(branches[selection], deleteOnlyIfMerged);
+			if ( GUILayout.Button("Merge Branch", GUILayout.MaxWidth(100)) ) {
+				GitSystem.MergeBranch(branches[selection]);
 				Close();
 			}
 		}
 		else
-			GUILayout.Label("No existing branches to delete...");
+			GUILayout.Label("No existing branches to merge...");
 	}
 }
