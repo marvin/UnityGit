@@ -109,7 +109,6 @@ public class GitSystem : Editor
 	/* **** Pull **** */
 
 	public static void Pull(string remoteName) {
-		Debug.Log("pull --verbose --progress " + remoteName + " " + GetCurrentBranch());
 		string feedback = RunGitCmd("pull " + remoteName + " " + GetCurrentBranch());
 		string[] unmergedFiles;
 
@@ -118,7 +117,7 @@ public class GitSystem : Editor
 			Debug.LogError("Error pulling!");
 		}
 		else
-			Debug.Log("Pull successful: " + feedback);
+			Debug.Log(feedback);
 
 		unmergedFiles = GetUnmergedFilesList();
 
