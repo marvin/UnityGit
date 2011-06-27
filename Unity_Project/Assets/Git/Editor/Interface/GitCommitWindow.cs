@@ -43,6 +43,28 @@ public class GitCommitWindow : EditorWindow {
 		fileCount += Instance.deletedFiles.Length;
 
 		Instance.somethingToCommit = fileCount > 0;
+		Instance.ConformModifyListToDeletionList();
+	}
+
+
+	void ConformModifyListToDeletionList() {
+		List<string> newModifiedList = new List<string>();
+
+		foreach ( string modFile in modifiedFiles ) {
+			bool addFile = true;
+
+			foreach ( string deletedFile in deletedFiles ) {
+				if ( modFile == deletedFile ) {
+					addFile = false;
+					break;
+				}
+			}
+
+			if ( addFile )
+				newModifiedList.Add(modFile);
+		}
+
+		modifiedFiles = newModifiedList.ToArray();
 	}
 
 
