@@ -96,8 +96,8 @@ public class GitSystem : Editor
 			RunGitCmd ("rm \"" + path + "\"");
 
 		Debug.LogWarning (RunGitCmd ("commit -m \"" + commitMessage + "\""));
-	
-		RunGitCmd("gc");
+
+		RunGitCmd("gc --auto");
 	}
 
 
