@@ -56,5 +56,6 @@ public class GitMenuCommands : MonoBehaviour {
 	[MenuItem ("Git/Branching/Checkout Branch")]
 	static void GitCheckoutBranch() {
 		GitCheckoutBranchWindow.Init();
+		AssetDatabase.Refresh();
 	}
 }
