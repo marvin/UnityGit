@@ -109,7 +109,8 @@ public class GitSystem : Editor
 	/* **** Pull **** */
 
 	public static void Pull(string remoteName) {
-		string feedback = RunGitCmd("pull -verbose --progress \"" + remoteName + "\" " + GetCurrentBranch());
+		Debug.Log("pull " + remoteName + " " + GetCurrentBranch());
+		string feedback = RunGitCmd("pull " + remoteName + " " + GetCurrentBranch());
 		string[] unmergedFiles;
 
 		if ( feedback.Contains("Aborting") ) {
