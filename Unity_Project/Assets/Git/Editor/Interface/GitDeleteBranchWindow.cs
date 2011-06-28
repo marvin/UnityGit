@@ -17,7 +17,7 @@ public class GitDeleteBranchWindow : EditorWindow {
 		// Get existing open window or if none, make a new one:
 		Instance = EditorWindow.GetWindow<GitDeleteBranchWindow>(true, "Git Delete Branch");
 
-		Instance.branches = GitSystem.GetBranchList(false, false);
+		Instance.branches = GitSystem.GetBranchList(false);
 	}
 
 

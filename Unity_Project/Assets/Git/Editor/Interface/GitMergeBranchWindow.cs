@@ -16,7 +16,7 @@ public class GitMergeBranchWindow : EditorWindow {
 		// Get existing open window or if none, make a new one:
 		Instance = EditorWindow.GetWindow<GitMergeBranchWindow>(true, "Git Merge Branch");
 
-		Instance.branches = GitSystem.GetBranchList(false, false);
+		Instance.branches = GitSystem.GetBranchList(false);
 	}
 
 

@@ -225,28 +225,24 @@ public class GitSystem : Editor
 
 
 	public static string[] GetBranchList() {
-		return GetBranchList(true, true);
+		return GetBranchList(true);
 	}
 
 
-	public static string[] GetBranchList(bool includeMaster, bool includeCurrent) {
+	public static string[] GetBranchList(bool includeCurrent) {
 		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch"));
 		List<string> modifiedBranchList = new List<string>();
 		string currentBranch = GetCurrentBranch();
 
 		foreach ( string branch in branches ) {
 			string branchName = branch.Replace("*", "");
-			bool isMaster;
 			bool isCurrent;
 
 			branchName = branchName.Replace(" ", "");
 
-			isMaster = branchName == "master";
 			isCurrent = branchName == currentBranch;
 
-			if ( isMaster && !includeMaster )
-				continue;
-			else if ( isCurrent && !includeCurrent )
+			if ( isCurrent && !includeCurrent )
 				continue;
 			else
 				modifiedBranchList.Add(branchName);
