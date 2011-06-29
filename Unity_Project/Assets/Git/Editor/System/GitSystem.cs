@@ -358,12 +358,14 @@ public class GitSystem : Editor
 	}
 
 
-	const string git32 = "\"C:\\Program Files (x86)\\Git\\bin\\git.exe\"";
-	const string git64 = "\"C:\\Program Files\\Git\\bin\\git.exe\"";
+	const string git32 = "\"" + @"C:\Program Files (x86)\Git\bin\git.exe" + "\"";
+	const string git64 = "\"" + @"C:\Program Files\Git\bin\git.exe" + "\"";
 
 	static string GetGitExePath() {
 		string locationKey = "GitLocation";
 		string location;
+
+		Debug.Log(File.Exists(git64));
 
 		if ( EditorPrefs.HasKey(locationKey) ) {
 			string loc = EditorPrefs.GetString(locationKey);
