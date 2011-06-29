@@ -36,13 +36,6 @@ public class GitSystem : Editor
 	}
 
 
-	[MenuItem("Git/Test")]
-	static void TestFunc ()
-	{
-		Debug.Log (RunGitCmd ("ls-files --modified --exclude-standard"));
-	}
-
-
 	static string GetRepoPath ()
 	{
 		string[] locationParts = Application.dataPath.Split ('/');

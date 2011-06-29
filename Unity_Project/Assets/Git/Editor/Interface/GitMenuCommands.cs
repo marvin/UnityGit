@@ -100,4 +100,11 @@ public class GitMenuCommands : MonoBehaviour {
 
 //		UnityGitHelper.UnityCleanupUntracked(GitSystem.GetUntrackedFilesList(false));
 	}
+
+
+	[MenuItem("Git/Test")]
+	static void TestFunc ()
+	{
+		Debug.Log (GitSystem.RunGitCmd ("ls-files --modified --exclude-standard"));
+	}
 }
