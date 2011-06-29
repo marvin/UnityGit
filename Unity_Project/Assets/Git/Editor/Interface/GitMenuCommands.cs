@@ -18,14 +18,14 @@ public class GitMenuCommands : MonoBehaviour {
 	}
 
 
-	[MenuItem ("Git/Pull")]
+	[MenuItem ("Git/Pull #&p")]
 	static void GitPull()
 	{
 		GitPullWindow.Init();
 	}
 
 
-	[MenuItem ("Git/Push")]
+	[MenuItem ("Git/Push #p")]
 	static void GitPush()
 	{
 		GitPushWindow.Init();

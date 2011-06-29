@@ -62,20 +62,27 @@ public class GitSystem : Editor
 		string[] modifiedFiles = GetModifiedFilesList ();
 		string[] untrackedFiles = GetUntrackedFilesList ();
 		string[] deletedFiles = GetDeletedFilesList ();
-		
+		string commitMessage = "Commit all from Unity:\n\n";
+
+		modifiedFiles = ConformModifyListToDeletionList(modifiedFiles, deletedFiles);
+
 		foreach (string path in modifiedFiles) {
 			RunGitCmd ("add \"" + path + "\"");
+			commitMessage += "modified: " + path + " \n";
 		}
 		
 		foreach (string path in untrackedFiles) {
 			RunGitCmd ("add \"" + path + "\"");
+			commitMessage += "added: " + path + " \n";
 		}
 		
 		foreach (string path in deletedFiles) {
 			RunGitCmd ("rm \"" + path + "\"");
+			commitMessage += "removed: " + path + " \n";
 		}
 		
-		Debug.LogWarning (RunGitCmd ("commit -m \"Commit from Unity!\""));
+		Debug.Log (RunGitCmd ("commit -m \"" + commitMessage + "\""));
+		Debug.Log(commitMessage);
 	}
 
 
@@ -88,7 +95,7 @@ public class GitSystem : Editor
 		foreach (string path in removeFiles)
 			RunGitCmd ("rm \"" + path + "\"");
 
-		Debug.LogWarning (RunGitCmd ("commit -m \"" + commitMessage + "\""));
+		Debug.Log (RunGitCmd ("commit -m \"" + commitMessage + "\""));
 
 		RunGitCmd("gc --auto");
 	}
@@ -192,6 +199,29 @@ public class GitSystem : Editor
 			return FilterUsingSelection(filesList);
 		else
 			return filesList;
+	}
+
+
+	/* **** ConformModifyListToDeletionList **** */
+
+	public static string[] ConformModifyListToDeletionList(string[] modifiedFiles, string[] deletedFiles) {
+		List<string> newModifiedList = new List<string>();
+
+		foreach ( string modFile in modifiedFiles ) {
+			bool addFile = true;
+
+			foreach ( string deletedFile in deletedFiles ) {
+				if ( modFile == deletedFile ) {
+					addFile = false;
+					break;
+				}
+			}
+
+			if ( addFile )
+				newModifiedList.Add(modFile);
+		}
+
+		return newModifiedList.ToArray();
 	}
 
 	/* **** GetDeletedFilesList **** */
