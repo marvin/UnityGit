@@ -61,31 +61,38 @@ public class GitConflictsWindow : EditorWindow {
 	string[] resolveUsing = { "Mine", "Theirs" };
 
 	void OnGUI() {
-		foreach ( string key in conflicts.Keys ) {
-			ConflictData conflict = conflicts[key];
+		if ( conflicts.Count > 0 )
+		{
+			foreach ( string key in conflicts.Keys ) {
+				ConflictData conflict = conflicts[key];
 
-			GUILayout.BeginHorizontal();
-			GUILayout.Label(conflict.fileName);
-			conflict.useMine = EditorGUILayout.Popup(conflict.useMine ? 0 : 1, resolveUsing) == 0;
-			if ( GUILayout.Button("Resolve") ) {
-				conflicts.Remove(key);
-				return;
-			}
-
-			GUILayout.EndHorizontal();
-
-			foreach ( string code in conflict.locationCodes ) {
-				// Is it ours?
-				if ( code == "2" ) {
-					GUILayout.Label(GitSystem.RunGitCmd("diff -" + code + " " + conflict.fileName));
-					GUILayout.Label(GitSystem.RunGitCmd("diff -ours " + conflict.fileName));
+				GUILayout.BeginHorizontal();
+				GUILayout.Label(conflict.fileName);
+				conflict.useMine = EditorGUILayout.Popup(conflict.useMine ? 0 : 1, resolveUsing) == 0;
+				if ( GUILayout.Button("Resolve") ) {
+					conflicts.Remove(key);
+					return;
 				}
 
-				// Is it theirs?
-				if ( code == "3" ) {
-//					GUILayout.Label(GitSystem.RunGitCmd("diff -theirs " + conflict.fileName));
+				GUILayout.EndHorizontal();
+
+				foreach ( string code in conflict.locationCodes ) {
+					// Is it ours?
+					if ( code == "2" ) {
+						GUILayout.Label(GitSystem.RunGitCmd("diff -" + code + " " + conflict.fileName));
+						GUILayout.Label(GitSystem.RunGitCmd("diff -ours " + conflict.fileName));
+					}
+
+					// Is it theirs?
+					if ( code == "3" ) {
+//						GUILayout.Label(GitSystem.RunGitCmd("diff -theirs " + conflict.fileName));
+					}
 				}
 			}
+		}
+		else
+		{
+			GUILayout.Label("No conflicts found.");
 		}
 	}
 }
