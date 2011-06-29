@@ -112,6 +112,29 @@ public class GitSystem : Editor
 	}
 
 
+	public static void ResolveConflict(string file, bool useMine)
+	{
+		string commitMessage = "\"Resolved conflict for file: " + file;
+
+		if ( useMine )
+		{
+			commitMessage += " using ours.\"";
+			RunGitCmd("checkout --ours " + file);
+		}
+		else
+		{
+			commitMessage += " using theirs.\"";
+			RunGitCmd("checkout --theirs " + file);
+		}
+
+		RunGitCmd("add " + file);
+
+		Debug.Log(RunGitCmd("commit -m " + commitMessage));
+
+		AssetDatabase.Refresh();
+	}
+
+
 	/* **** Push **** */
 
 	public static void Push(string remoteName)
@@ -139,6 +162,8 @@ public class GitSystem : Editor
 
 		if ( unmergedFiles.Length > 0 )
 			GitConflictsWindow.Init(unmergedFiles);
+
+		AssetDatabase.Refresh();
 	}
 
 
@@ -371,12 +396,16 @@ public class GitSystem : Editor
 				return;
 			}
 		}
+
+		AssetDatabase.Refresh();
 	}
 
 
 	public static void MergeBranch(string branchName)
 	{
 		Debug.Log(RunGitCmd("merge " + branchName));
+
+		AssetDatabase.Refresh();
 	}
 
 
@@ -450,7 +479,7 @@ public class GitSystem : Editor
 			result = streamReader.ReadToEnd ();
 		
 			proc.Close ();
-		
+
 			return result;
 		}
 
