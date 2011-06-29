@@ -4,14 +4,14 @@ using UnityEditor;
 using System.Collections;
 
 public class GitMenuCommands : MonoBehaviour {
-	[MenuItem ("Git/Commit")]
+	[MenuItem ("Git/Commit #c")]
 	static void GitCommit()
 	{
 		GitCommitWindow.Init();
 	}
 
 
-	[MenuItem("Git/Commit All")]
+	[MenuItem("Git/Commit All %#c")]
 	static void CommitAll()
 	{
 		GitSystem.CommitAll();
