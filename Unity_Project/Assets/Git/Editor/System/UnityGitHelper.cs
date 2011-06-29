@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEditor;
+
 using System.Collections;
 
 public class UnityGitHelper : MonoBehaviour {
@@ -7,6 +9,7 @@ public class UnityGitHelper : MonoBehaviour {
 		foreach ( string path in untrackedFiles)
 		{
 			Debug.Log(path);
+			AssetDatabase.DeleteAsset(path);
 		}
 	}
 }

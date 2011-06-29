@@ -132,10 +132,18 @@ public class GitSystem : Editor
 
 	public static string[] GetModifiedFilesList ()
 	{
+		return GetModifiedFilesList(true);
+	}
+
+	public static string[] GetModifiedFilesList (bool filterUsingSelection)
+	{
 		string filesString = RunGitCmd ("ls-files --modified --exclude-standard");
 		string[] filesList = RemoveEmptyListEntries(filesString);
 		
-		return FilterUsingSelection(filesList);
+		if ( filterUsingSelection )
+			return FilterUsingSelection(filesList);
+		else
+			return filesList;
 	}
 
 
@@ -143,10 +151,18 @@ public class GitSystem : Editor
 
 	public static string[] GetUntrackedFilesList ()
 	{
+		return GetUntrackedFilesList(true);
+	}
+
+	public static string[] GetUntrackedFilesList (bool filterUsingSelection)
+	{
 		string filesString = RunGitCmd ("ls-files --other --exclude-standard");
 		string[] filesList = RemoveEmptyListEntries(filesString);
-		
-		return FilterUsingSelection(filesList);
+
+		if ( filterUsingSelection )
+			return FilterUsingSelection(filesList);
+		else
+			return filesList;
 	}
 
 
@@ -154,17 +170,35 @@ public class GitSystem : Editor
 
 	public static string[] GetDeletedFilesList ()
 	{
+		return GetDeletedFilesList(true);
+	}
+
+	public static string[] GetDeletedFilesList (bool filterUsingSelection)
+	{
 		string filesString = RunGitCmd ("ls-files --deleted --exclude-standard");
 		string[] filesList = RemoveEmptyListEntries(filesString);
 		
-		return FilterUsingSelection(filesList);
+		if ( filterUsingSelection )
+			return FilterUsingSelection(filesList);
+		else
+			return filesList;
 	}
 
-	public static string[] GetUnmergedFilesList () {
+	/* **** GetUnmergedFilesList **** */
+
+	public static string[] GetUnmergedFilesList ()
+	{
+		return GetUnmergedFilesList(true);
+	}
+
+	public static string[] GetUnmergedFilesList (bool filterUsingSelection) {
 		string filesString = RunGitCmd ("ls-files --unmerged --exclude-standard");
 		string[] filesList = RemoveEmptyListEntries(filesString);
 		
-		return FilterUsingSelection(filesList);
+		if ( filterUsingSelection )
+			return FilterUsingSelection(filesList);
+		else
+			return filesList;
 	}
 
 	/* **** GetDeletedFilesList **** */
@@ -358,14 +392,12 @@ public class GitSystem : Editor
 	}
 
 
-	const string git32 = "\"" + @"C:\Program Files (x86)\Git\bin\git.exe" + "\"";
-	const string git64 = "\"" + @"C:\Program Files\Git\bin\git.exe" + "\"";
+	const string git32 =  @"C:\Program Files\Git\bin\git.exe";
+	const string git64 = @"C:\Program Files (x86)\Git\bin\git.exe";
 
 	static string GetGitExePath() {
 		string locationKey = "GitLocation";
 		string location;
-
-		Debug.Log(File.Exists(git64));
 
 		if ( EditorPrefs.HasKey(locationKey) ) {
 			string loc = EditorPrefs.GetString(locationKey);
@@ -375,12 +407,12 @@ public class GitSystem : Editor
 			}
 		}
 
-		if ( File.Exists(git64) ) {
+		if ( File.Exists(git32) ) {
 			EditorPrefs.SetString(locationKey, git64);
 			return git64;
 		}
 
-		if ( File.Exists(git32) ) {
+		if ( File.Exists(git64) ) {
 			EditorPrefs.SetString(locationKey, git32);
 			return git32;
 		}
