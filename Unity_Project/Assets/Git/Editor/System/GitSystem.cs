@@ -27,7 +27,9 @@ public class GitSystem : Editor
 			
 			repoPath = repoPath.Replace (@"\", "/");
 			Debug.Log (repoPath);
-		} else {
+		}
+		else
+		{
 			Debug.Log ("Repo already exists at: " + repoPath);
 			return;
 		}
@@ -40,22 +42,27 @@ public class GitSystem : Editor
 	{
 		string[] locationParts = Application.dataPath.Split ('/');
 		
-		for (int o = 0; o < locationParts.Length; o++) {
+		for (int o = 0; o < locationParts.Length; o++)
+		{
 			string tryPath = "";
 			
-			for (int i = 0; i < locationParts.Length - o; i++) {
+			for (int i = 0; i < locationParts.Length - o; i++)
+			{
 				tryPath += locationParts[i] + "/";
 			}
 			
-			if (Directory.Exists (tryPath + ".git")) {
+			if (Directory.Exists (tryPath + ".git"))
+			{
 				tryPath = tryPath.Remove(tryPath.Length-1);
 				return tryPath.Replace (@"\", @"/");
 			}
 		}
-		
+
 		return "";
 	}
 
+
+	/* **** Commit All **** */
 
 	public static void CommitAll ()
 	{
@@ -66,17 +73,20 @@ public class GitSystem : Editor
 
 		modifiedFiles = ConformModifyListToDeletionList(modifiedFiles, deletedFiles);
 
-		foreach (string path in modifiedFiles) {
+		foreach (string path in modifiedFiles)
+		{
 			RunGitCmd ("add \"" + path + "\"");
 			commitMessage += "modified: " + path + " \n";
 		}
 		
-		foreach (string path in untrackedFiles) {
+		foreach (string path in untrackedFiles)
+		{
 			RunGitCmd ("add \"" + path + "\"");
 			commitMessage += "added: " + path + " \n";
 		}
 		
-		foreach (string path in deletedFiles) {
+		foreach (string path in deletedFiles)
+		{
 			RunGitCmd ("rm \"" + path + "\"");
 			commitMessage += "removed: " + path + " \n";
 		}
@@ -88,7 +98,8 @@ public class GitSystem : Editor
 
 	/* **** Commit **** */
 
-	public static void Commit(string commitMessage, string[] addFiles, string[] removeFiles) {
+	public static void Commit(string commitMessage, string[] addFiles, string[] removeFiles)
+	{
 		foreach (string path in addFiles)
 			RunGitCmd ("add \"" + path + "\"");
 
@@ -103,18 +114,21 @@ public class GitSystem : Editor
 
 	/* **** Push **** */
 
-	public static void Push(string remoteName) {
+	public static void Push(string remoteName)
+	{
 		RunGitCmd("push --verbose --progress " + remoteName + " " + GetCurrentBranch());
 	}
 
 
 	/* **** Pull **** */
 
-	public static void Pull(string remoteName) {
+	public static void Pull(string remoteName)
+	{
 		string feedback = RunGitCmd("pull " + remoteName + " " + GetCurrentBranch());
 		string[] unmergedFiles;
 
-		if ( feedback.Contains("Aborting") ) {
+		if ( feedback.Contains("Aborting") )
+		{
 			Debug.LogError(feedback);
 			Debug.LogError("Error pulling!");
 		}
@@ -134,6 +148,7 @@ public class GitSystem : Editor
 	{
 		return GetModifiedFilesList(true);
 	}
+
 
 	public static string[] GetModifiedFilesList (bool filterUsingSelection)
 	{
@@ -191,7 +206,8 @@ public class GitSystem : Editor
 		return GetUnmergedFilesList(true);
 	}
 
-	public static string[] GetUnmergedFilesList (bool filterUsingSelection) {
+	public static string[] GetUnmergedFilesList (bool filterUsingSelection)
+	{
 		string filesString = RunGitCmd ("ls-files --unmerged --exclude-standard");
 		string[] filesList = RemoveEmptyListEntries(filesString);
 		
@@ -204,14 +220,18 @@ public class GitSystem : Editor
 
 	/* **** ConformModifyListToDeletionList **** */
 
-	public static string[] ConformModifyListToDeletionList(string[] modifiedFiles, string[] deletedFiles) {
+	public static string[] ConformModifyListToDeletionList(string[] modifiedFiles, string[] deletedFiles)
+	{
 		List<string> newModifiedList = new List<string>();
 
-		foreach ( string modFile in modifiedFiles ) {
+		foreach ( string modFile in modifiedFiles )
+		{
 			bool addFile = true;
 
-			foreach ( string deletedFile in deletedFiles ) {
-				if ( modFile == deletedFile ) {
+			foreach ( string deletedFile in deletedFiles )
+			{
+				if ( modFile == deletedFile )
+				{
 					addFile = false;
 					break;
 				}
@@ -224,22 +244,28 @@ public class GitSystem : Editor
 		return newModifiedList.ToArray();
 	}
 
+
 	/* **** GetDeletedFilesList **** */
 
-	public static string[] GetRemotesList () {
+	public static string[] GetRemotesList ()
+	{
 		return RemoveEmptyListEntries(RunGitCmd("remote"));
 	}
 
 
 	/* **** Filters files based on a selected directory **** */
 
-	static string[] FilterUsingSelection(string[] files) {
-		if ( Selection.activeObject != null ) {
+	static string[] FilterUsingSelection(string[] files)
+	{
+		if ( Selection.activeObject != null )
+		{
 			List<string> filteredFiles = new List<string>();
 			string baseDirectory = AssetDatabase.GetAssetPath(Selection.activeObject);
 
-			foreach ( string file in files ) {
-				if ( file.StartsWith(baseDirectory) ) {
+			foreach ( string file in files )
+			{
+				if ( file.StartsWith(baseDirectory) )
+				{
 					filteredFiles.Add(file);
 				}
 			}
@@ -268,11 +294,14 @@ public class GitSystem : Editor
 
 	/* **** Branching **** */
 
-	public static string GetCurrentBranch() {
+	public static string GetCurrentBranch()
+	{
 		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch"));
 		
-		foreach (string branch in branches) {
-			if (branch.Contains ("*")) {
+		foreach (string branch in branches)
+		{
+			if (branch.Contains ("*"))
+			{
 				return branch.Replace("* ", "");
 			}
 		}
@@ -281,17 +310,20 @@ public class GitSystem : Editor
 	}
 
 
-	public static string[] GetBranchList() {
+	public static string[] GetBranchList()
+	{
 		return GetBranchList(true);
 	}
 
 
-	public static string[] GetBranchList(bool includeCurrent) {
+	public static string[] GetBranchList(bool includeCurrent)
+	{
 		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch"));
 		List<string> modifiedBranchList = new List<string>();
 		string currentBranch = GetCurrentBranch();
 
-		foreach ( string branch in branches ) {
+		foreach ( string branch in branches )
+		{
 			string branchName = branch.Replace("*", "");
 			bool isCurrent;
 
@@ -309,13 +341,16 @@ public class GitSystem : Editor
 	}
 
 
-	public static void CreateBranch(string branchName) {
+	public static void CreateBranch(string branchName)
+	{
 		CreateBranch(branchName, true);
 	}
 
 
-	public static void CreateBranch(string branchName, bool checkoutAfterCreation) {
-		if ( !DoesBranchExist(branchName) ) {
+	public static void CreateBranch(string branchName, bool checkoutAfterCreation)
+	{
+		if ( !DoesBranchExist(branchName) )
+		{
 			RunGitCmd("branch " + branchName);
 
 			if ( checkoutAfterCreation )
@@ -324,11 +359,14 @@ public class GitSystem : Editor
 	}
 
 
-	public static void CheckoutBranch(string branchName) {
-		if ( DoesBranchExist(branchName) ) {
+	public static void CheckoutBranch(string branchName)
+	{
+		if ( DoesBranchExist(branchName) )
+		{
 			string result = RunGitCmd("checkout " + branchName);
 
-			if (result.Contains ("Aborting")) {
+			if (result.Contains ("Aborting"))
+			{
 				Debug.LogError ("Branch checkout has been aborted.  Make sure you commit or stash your changes before checking out another branch.");
 				return;
 			}
@@ -336,15 +374,18 @@ public class GitSystem : Editor
 	}
 
 
-	public static void MergeBranch(string branchName) {
+	public static void MergeBranch(string branchName)
+	{
 		Debug.Log(RunGitCmd("merge " + branchName));
 	}
 
 
-	public static void DeleteBranch(string branchName, bool mustBeMerged) {
+	public static void DeleteBranch(string branchName, bool mustBeMerged)
+	{
 		string removeFlag = mustBeMerged ? "-d" : "-D";
 
-		if ( DoesBranchExist(branchName) ) {
+		if ( DoesBranchExist(branchName) )
+		{
 			string result;
 
 			result = RunGitCmd("branch --verbose " + removeFlag + " " + branchName);
@@ -353,13 +394,14 @@ public class GitSystem : Editor
 	}
 
 
-	public static bool DoesBranchExist(string newBranchName) {
+	public static bool DoesBranchExist(string newBranchName)
+	{
 		string[] branches = GetBranchList();
 
-		foreach ( string branch in branches ) {
-			if ( branch == newBranchName || branch == "* " + newBranchName ) {
+		foreach ( string branch in branches )
+		{
+			if ( branch == newBranchName || branch == "* " + newBranchName )
 				return true;
-			}
 		}
 
 		return false;
@@ -379,7 +421,8 @@ public class GitSystem : Editor
 		string cmd = GetGitExePath();
 		string repoPath = GetRepoPath();
 
-		if ( cmd != "" ) {
+		if ( cmd != "" )
+		{
 			Process proc = new Process ();
 			ProcessStartInfo startInfo = new ProcessStartInfo (cmd);
 			StreamReader streamReader;
@@ -418,31 +461,37 @@ public class GitSystem : Editor
 	const string git32 =  @"C:\Program Files\Git\bin\git.exe";
 	const string git64 = @"C:\Program Files (x86)\Git\bin\git.exe";
 
-	static string GetGitExePath() {
+	static string GetGitExePath()
+	{
 		string locationKey = "GitLocation";
 		string location;
 
-		if ( EditorPrefs.HasKey(locationKey) ) {
+		if ( EditorPrefs.HasKey(locationKey) )
+		{
 			string loc = EditorPrefs.GetString(locationKey);
 
-			if ( File.Exists(loc) ) {
+			if ( File.Exists(loc) )
+			{
 				return loc;
 			}
 		}
 
-		if ( File.Exists(git32) ) {
+		if ( File.Exists(git32) )
+		{
 			EditorPrefs.SetString(locationKey, git64);
 			return git64;
 		}
 
-		if ( File.Exists(git64) ) {
+		if ( File.Exists(git64) )
+		{
 			EditorPrefs.SetString(locationKey, git32);
 			return git32;
 		}
 
 		location = EditorUtility.OpenFilePanel("Where is Git.exe?", "C:\\Program Files\\", "exe");
 
-		if ( File.Exists(location) ) {
+		if ( File.Exists(location) )
+		{
 			EditorPrefs.SetString(locationKey, location);
 			return location;
 		}
