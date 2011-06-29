@@ -65,7 +65,7 @@ public class GitConflictsWindow : EditorWindow
 	}
 
 
-	string[] resolveUsing = { "Mine", "Theirs" };
+	string[] resolveUsing = { "Ours", "Theirs" };
 
 	void OnGUI()
 	{
@@ -78,6 +78,11 @@ public class GitConflictsWindow : EditorWindow
 				GUILayout.BeginHorizontal();
 				GUILayout.Label(conflict.fileName);
 				conflict.useMine = EditorGUILayout.Popup(conflict.useMine ? 0 : 1, resolveUsing) == 0;
+
+				if ( GUILayout.Button("Diff") )
+				{
+					ShowDiff(GitSystem.RunGitCmd("diff " + conflict.fileName));
+				}
 
 				if ( GUILayout.Button("Resolve") )
 				{
@@ -109,5 +114,31 @@ public class GitConflictsWindow : EditorWindow
 		{
 			GUILayout.Label("No conflicts found.");
 		}
+	}
+
+
+	void ShowDiff(string diff)
+	{
+		string[] lines = diff.Split('\n');
+		int showingFlag = 0; // 0 = None, 1 = Ours, 2 = Theirs
+		string ours = "";
+		string theirs = "";
+
+		for ( int i = 0; i < lines.Length; i++ )
+		{
+			if ( lines[i].Contains("++<<<<<<<") )
+				showingFlag = 1;
+			else if ( lines[i].Contains("++=======") )
+				showingFlag = 2;
+			else if ( lines[i].Contains("++>>>>>>>") )
+				showingFlag = 0;
+			else if ( showingFlag == 1 )
+				ours += lines[i] + "\n";
+			else if ( showingFlag == 2 )
+				theirs += lines[i] + "\n";
+		}
+
+		Debug.LogWarning(ours);
+		Debug.LogError(theirs);
 	}
 }
