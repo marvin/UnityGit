@@ -28,30 +28,48 @@ public class GitCheckoutBranchWindow : EditorWindow {
 	}
 
 
+	bool doCheckout = false;
+
 	void OnGUI() {
-		bool currentBranchSelected = false;
-		Color defaultColor = GUI.contentColor;
+		if ( !doCheckout )
+		{
+			bool currentBranchSelected = false;
+			Color defaultColor = GUI.contentColor;
 
-		selection = EditorGUILayout.Popup(selection, branches);
+			selection = EditorGUILayout.Popup(selection, branches);
 
-		if ( branches[selection] == currentBranch ) {
-			currentBranchSelected = true;
+			if ( branches[selection] == currentBranch ) {
+				currentBranchSelected = true;
 
-			GUI.contentColor = Color.yellow;
-			GUILayout.Label("You have the current branch selected...");
-			GUI.contentColor = defaultColor;
+				GUI.contentColor = Color.yellow;
+				GUILayout.Label("You have the current branch selected...");
+				GUI.contentColor = defaultColor;
+			}
+			else
+				GUILayout.Label("");
+
+			if ( GUILayout.Button("Checkout Branch", GUILayout.MaxWidth(125)) )
+			{
+				if ( !currentBranchSelected )
+				{
+					doCheckout = true;
+				}
+			}
 		}
 		else
-			GUILayout.Label("");
-
-		if ( GUILayout.Button("Checkout Branch", GUILayout.MaxWidth(125)) )
 		{
-			if ( !currentBranchSelected ) {
+			GUILayout.Label("Are you sure you want to checkout?");
+			GUILayout.Label("Any untracked files will be removed.");
+
+			if ( GUILayout.Button("Okay") )
+			{
 				GitSystem.CheckoutBranch(branches[selection]);
 				Debug.Log("Current branch: " + GitSystem.GetCurrentBranch() + "\n");
-			}
 
-			Close();
+				// TODO: Kill untracked Unity project files using unity's delete system
+				GitSystem.RunGitCmd("clean -d -f");
+				Close();
+			}
 		}
 	}
 }
