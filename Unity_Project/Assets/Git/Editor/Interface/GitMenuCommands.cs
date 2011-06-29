@@ -4,28 +4,28 @@ using UnityEditor;
 using System.Collections;
 
 public class GitMenuCommands : MonoBehaviour {
-	[MenuItem ("Git/Commit #c")]
+	[MenuItem ("Git/Commit %#c")]
 	static void GitCommit()
 	{
 		GitCommitWindow.Init();
 	}
 
 
-	[MenuItem("Git/Commit All %#c")]
+	[MenuItem("Git/Commit All %#&c")]
 	static void CommitAll()
 	{
 		GitSystem.CommitAll();
 	}
 
 
-	[MenuItem ("Git/Pull #&p")]
+	[MenuItem ("Git/Pull %#&p")]
 	static void GitPull()
 	{
 		GitPullWindow.Init();
 	}
 
 
-	[MenuItem ("Git/Push #p")]
+	[MenuItem ("Git/Push #&p")]
 	static void GitPush()
 	{
 		GitPushWindow.Init();
