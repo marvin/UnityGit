@@ -104,7 +104,7 @@ public class GitSystem : Editor
 	/* **** Push **** */
 
 	public static void Push(string remoteName) {
-		Debug.Log(RunGitCmd("push --verbose --progress " + remoteName + " " + GetCurrentBranch()));
+		RunGitCmd("push --verbose --progress " + remoteName + " " + GetCurrentBranch());
 	}
 
 
