@@ -5,10 +5,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-public class GitConflictsWindow : EditorWindow {
+public class GitConflictsWindow : EditorWindow
+{
 	public static GitConflictsWindow Instance { get; private set; }
 
-	class ConflictData {
+	class ConflictData
+	{
 		public string index = "";
 		public string fileName = "";
 		public List<string> hashCodes = new List<string>();
@@ -18,12 +20,14 @@ public class GitConflictsWindow : EditorWindow {
 	Dictionary<string, ConflictData> conflicts = new Dictionary<string, ConflictData>();
 
 
-	public static void Init () {
+	public static void Init ()
+	{
 		Init(null);
 	}
 
 
-	public static void Init (string[] conflictedFiles) {
+	public static void Init (string[] conflictedFiles)
+	{
 		// Get existing open window or if none, make a new one:
 		Instance = EditorWindow.GetWindow<GitConflictsWindow>(true, "Git Push");
 
@@ -34,13 +38,16 @@ public class GitConflictsWindow : EditorWindow {
 	}
 
 
-	void ReInit() {
+	void ReInit()
+	{
 		ParseData(GitSystem.GetUnmergedFilesList());
 	}
 
 
-	void ParseData(string[] conflictedFiles) {
-		for ( int i = 0; i < conflictedFiles.Length; i++ ) {
+	void ParseData(string[] conflictedFiles)
+	{
+		for ( int i = 0; i < conflictedFiles.Length; i++ )
+		{
 			string[] dataSplit = conflictedFiles[i].Split('\t');
 			string[] secondSplit = dataSplit[0].Split(' ');
 			string fileName = dataSplit[1];
@@ -60,31 +67,38 @@ public class GitConflictsWindow : EditorWindow {
 
 	string[] resolveUsing = { "Mine", "Theirs" };
 
-	void OnGUI() {
+	void OnGUI()
+	{
 		if ( conflicts.Count > 0 )
 		{
-			foreach ( string key in conflicts.Keys ) {
+			foreach ( string key in conflicts.Keys )
+			{
 				ConflictData conflict = conflicts[key];
 
 				GUILayout.BeginHorizontal();
 				GUILayout.Label(conflict.fileName);
 				conflict.useMine = EditorGUILayout.Popup(conflict.useMine ? 0 : 1, resolveUsing) == 0;
-				if ( GUILayout.Button("Resolve") ) {
+
+				if ( GUILayout.Button("Resolve") )
+				{
 					conflicts.Remove(key);
 					return;
 				}
 
 				GUILayout.EndHorizontal();
 
-				foreach ( string code in conflict.locationCodes ) {
+				foreach ( string code in conflict.locationCodes )
+				{
 					// Is it ours?
-					if ( code == "2" ) {
+					if ( code == "2" )
+					{
 						GUILayout.Label(GitSystem.RunGitCmd("diff -" + code + " " + conflict.fileName));
 						GUILayout.Label(GitSystem.RunGitCmd("diff -ours " + conflict.fileName));
 					}
 
 					// Is it theirs?
-					if ( code == "3" ) {
+					if ( code == "3" )
+					{
 //						GUILayout.Label(GitSystem.RunGitCmd("diff -theirs " + conflict.fileName));
 					}
 				}
