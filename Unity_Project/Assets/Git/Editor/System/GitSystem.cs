@@ -130,6 +130,8 @@ public class GitSystem : Editor
 		RunGitCmd("add " + file);
 
 		Debug.Log(RunGitCmd("commit -m " + commitMessage));
+
+		AssetDatabase.Refresh();
 	}
 
 
@@ -160,6 +162,8 @@ public class GitSystem : Editor
 
 		if ( unmergedFiles.Length > 0 )
 			GitConflictsWindow.Init(unmergedFiles);
+
+		AssetDatabase.Refresh();
 	}
 
 
@@ -392,12 +396,16 @@ public class GitSystem : Editor
 				return;
 			}
 		}
+
+		AssetDatabase.Refresh();
 	}
 
 
 	public static void MergeBranch(string branchName)
 	{
 		Debug.Log(RunGitCmd("merge " + branchName));
+
+		AssetDatabase.Refresh();
 	}
 
 
@@ -472,8 +480,6 @@ public class GitSystem : Editor
 		
 			proc.Close ();
 
-			AssetDatabase.Refresh();
-		
 			return result;
 		}
 
