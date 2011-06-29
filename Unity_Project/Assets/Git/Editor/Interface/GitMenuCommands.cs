@@ -79,6 +79,8 @@ public class GitMenuCommands : MonoBehaviour {
 	static void CleanupUntracked()
 	{
 		Debug.Log(GitSystem.RunGitCmd("clean -d -f"));
+
+		UnityGitHelper.UnityCleanupUntracked(GitSystem.GetUntrackedFilesList());
 	}
 
 
