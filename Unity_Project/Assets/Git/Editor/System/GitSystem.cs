@@ -160,8 +160,6 @@ public class GitSystem : Editor
 
 		if ( unmergedFiles.Length > 0 )
 			GitConflictsWindow.Init(unmergedFiles);
-
-		AssetDatabase.Refresh();
 	}
 
 
@@ -473,6 +471,8 @@ public class GitSystem : Editor
 			result = streamReader.ReadToEnd ();
 		
 			proc.Close ();
+
+			AssetDatabase.Refresh();
 		
 			return result;
 		}
