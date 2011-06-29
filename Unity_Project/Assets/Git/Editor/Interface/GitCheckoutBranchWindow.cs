@@ -67,7 +67,8 @@ public class GitCheckoutBranchWindow : EditorWindow {
 				Debug.Log("Current branch: " + GitSystem.GetCurrentBranch() + "\n");
 
 				// TODO: Kill untracked Unity project files using unity's delete system
-				GitSystem.RunGitCmd("clean -d -f");
+				UnityGitHelper.CleanupUntracked();
+
 				Close();
 			}
 		}

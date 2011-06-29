@@ -47,6 +47,14 @@ public class GitMenuCommands : MonoBehaviour {
 		Debug.Log("Current branch: " + GitSystem.GetCurrentBranch() + "\n");
 	}
 
+
+	[MenuItem ("Git/Branching/Checkout")]
+	static void GitCheckoutBranch()
+	{
+		GitCheckoutBranchWindow.Init();
+	}
+
+
 	[MenuItem ("Git/Branching/Create")]
 	static void GitCreateBranch()
 	{
@@ -68,28 +76,17 @@ public class GitMenuCommands : MonoBehaviour {
 	}
 
 
-	[MenuItem ("Git/Branching/Checkout")]
-	static void GitCheckoutBranch()
-	{
-		GitCheckoutBranchWindow.Init();
-	}
-
-
 	[MenuItem ("Git/Cleanup/Untracked")]
 	static void CleanupUntracked()
 	{
-		Debug.Log(GitSystem.RunGitCmd("clean -d -f"));
-
-		UnityGitHelper.UnityCleanupUntracked(GitSystem.GetUntrackedFilesList(false));
+		UnityGitHelper.CleanupUntracked();
 	}
 
 
 	[MenuItem ("Git/Cleanup/Untracked And Ignored")]
 	static void CleanupUntrackedAndIgnored()
 	{
-		Debug.Log(GitSystem.RunGitCmd("clean -d -x -f"));
-
-		UnityGitHelper.UnityCleanupUntracked(GitSystem.GetUntrackedFilesList(false));
+		UnityGitHelper.CleanupUntracked();
 	}
 
 
