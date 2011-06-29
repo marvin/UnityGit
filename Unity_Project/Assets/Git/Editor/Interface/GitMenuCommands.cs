@@ -47,6 +47,14 @@ public class GitMenuCommands : MonoBehaviour {
 		Debug.Log("Current branch: " + GitSystem.GetCurrentBranch() + "\n");
 	}
 
+
+	[MenuItem ("Git/Branching/Checkout")]
+	static void GitCheckoutBranch()
+	{
+		GitCheckoutBranchWindow.Init();
+	}
+
+
 	[MenuItem ("Git/Branching/Create")]
 	static void GitCreateBranch()
 	{
@@ -65,13 +73,6 @@ public class GitMenuCommands : MonoBehaviour {
 	static void GitDeleteBranch()
 	{
 		GitDeleteBranchWindow.Init();
-	}
-
-
-	[MenuItem ("Git/Branching/Checkout")]
-	static void GitCheckoutBranch()
-	{
-		GitCheckoutBranchWindow.Init();
 	}
 
 
