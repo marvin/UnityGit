@@ -138,6 +138,7 @@ public class GitConflictsWindow : EditorWindow
 				theirs += lines[i] + "\n";
 		}
 
+		Debug.Log(diff);
 		Debug.LogWarning(ours);
 		Debug.LogError(theirs);
 	}
