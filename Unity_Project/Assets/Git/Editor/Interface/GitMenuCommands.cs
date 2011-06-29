@@ -80,7 +80,7 @@ public class GitMenuCommands : MonoBehaviour {
 	{
 		Debug.Log(GitSystem.RunGitCmd("clean -d -f"));
 
-		UnityGitHelper.UnityCleanupUntracked(GitSystem.GetUntrackedFilesList());
+		UnityGitHelper.UnityCleanupUntracked(GitSystem.GetUntrackedFilesList(false));
 	}
 
 
@@ -88,6 +88,8 @@ public class GitMenuCommands : MonoBehaviour {
 	static void CleanupUntrackedAndIgnored()
 	{
 		Debug.Log(GitSystem.RunGitCmd("clean -d -x -f"));
+
+		UnityGitHelper.UnityCleanupUntracked(GitSystem.GetUntrackedFilesList(false));
 	}
 
 
@@ -95,5 +97,7 @@ public class GitMenuCommands : MonoBehaviour {
 	static void CleanupIgnored()
 	{
 		Debug.Log(GitSystem.RunGitCmd("clean -d -X -f"));
+
+//		UnityGitHelper.UnityCleanupUntracked(GitSystem.GetUntrackedFilesList(false));
 	}
 }
