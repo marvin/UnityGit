@@ -112,6 +112,27 @@ public class GitSystem : Editor
 	}
 
 
+	public static void ResolveConflict(string file, bool useMine)
+	{
+		string commitMessage = "\"Resolved conflict for file: " + file;
+
+		if ( useMine )
+		{
+			commitMessage += " using ours.\"";
+			RunGitCmd("checkout --ours " + file);
+		}
+		else
+		{
+			commitMessage += " using theirs.\"";
+			RunGitCmd("checkout --theirs " + file);
+		}
+
+		RunGitCmd("add " + file);
+
+		Debug.Log(RunGitCmd("commit -m " + commitMessage));
+	}
+
+
 	/* **** Push **** */
 
 	public static void Push(string remoteName)
@@ -139,6 +160,8 @@ public class GitSystem : Editor
 
 		if ( unmergedFiles.Length > 0 )
 			GitConflictsWindow.Init(unmergedFiles);
+
+		AssetDatabase.Refresh();
 	}
 
 

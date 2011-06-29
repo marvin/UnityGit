@@ -81,6 +81,7 @@ public class GitConflictsWindow : EditorWindow
 
 				if ( GUILayout.Button("Resolve") )
 				{
+					GitSystem.ResolveConflict(conflict.fileName, conflict.useMine);
 					conflicts.Remove(key);
 					return;
 				}
@@ -92,8 +93,8 @@ public class GitConflictsWindow : EditorWindow
 					// Is it ours?
 					if ( code == "2" )
 					{
-						GUILayout.Label(GitSystem.RunGitCmd("diff -" + code + " " + conflict.fileName));
-						GUILayout.Label(GitSystem.RunGitCmd("diff -ours " + conflict.fileName));
+//						GUILayout.Label(GitSystem.RunGitCmd("diff -" + code + " " + conflict.fileName));
+//						GUILayout.Label(GitSystem.RunGitCmd("diff --ours " + conflict.fileName));
 					}
 
 					// Is it theirs?
