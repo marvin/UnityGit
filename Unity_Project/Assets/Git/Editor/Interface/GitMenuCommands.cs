@@ -5,31 +5,36 @@ using System.Collections;
 
 public class GitMenuCommands : MonoBehaviour {
 	[MenuItem ("Git/Commit")]
-	static void GitCommit() {
+	static void GitCommit()
+	{
 		GitCommitWindow.Init();
 	}
 
 
 	[MenuItem("Git/Commit All")]
-	static void CommitAll() {
+	static void CommitAll()
+	{
 		GitSystem.CommitAll();
 	}
 
 
 	[MenuItem ("Git/Pull")]
-	static void GitPull() {
+	static void GitPull()
+	{
 		GitPullWindow.Init();
 	}
 
 
 	[MenuItem ("Git/Push")]
-	static void GitPush() {
+	static void GitPush()
+	{
 		GitPushWindow.Init();
 	}
 
 
 	[MenuItem ("Git/Resolve Conflicts (Unmerged)")]
-	static void GitResolveConflicts() {
+	static void GitResolveConflicts()
+	{
 		GitConflictsWindow.Init();
 	}
 
@@ -37,30 +42,56 @@ public class GitMenuCommands : MonoBehaviour {
 	/* **** Branching **** */
 
 	[MenuItem ("Git/Branching/Print Current")]
-	static void GitCurrentBranch() {
+	static void GitCurrentBranch()
+	{
 		Debug.Log("Current branch: " + GitSystem.GetCurrentBranch() + "\n");
 	}
 
 	[MenuItem ("Git/Branching/Create")]
-	static void GitCreateBranch() {
+	static void GitCreateBranch()
+	{
 		GitCreateBranchWindow.Init();
 	}
 
 
 	[MenuItem ("Git/Branching/Merge")]
-	static void GitMergeBranch() {
+	static void GitMergeBranch()
+	{
 		GitMergeBranchWindow.Init();
 	}
 
 
 	[MenuItem ("Git/Branching/Delete")]
-	static void GitDeleteBranch() {
+	static void GitDeleteBranch()
+	{
 		GitDeleteBranchWindow.Init();
 	}
 
 
 	[MenuItem ("Git/Branching/Checkout")]
-	static void GitCheckoutBranch() {
+	static void GitCheckoutBranch()
+	{
 		GitCheckoutBranchWindow.Init();
+	}
+
+
+	[MenuItem ("Git/Cleanup/Untracked")]
+	static void CleanupUntracked()
+	{
+		Debug.Log(GitSystem.RunGitCmd("clean -d -f"));
+	}
+
+
+	[MenuItem ("Git/Cleanup/Untracked And Ignored")]
+	static void CleanupUntrackedAndIgnored()
+	{
+		Debug.Log(GitSystem.RunGitCmd("clean -d -x -f"));
+	}
+
+
+	[MenuItem ("Git/Cleanup/Ignored")]
+	static void CleanupIgnored()
+	{
+		Debug.Log(GitSystem.RunGitCmd("clean -d -X -f"));
 	}
 }
