@@ -167,6 +167,22 @@ public class GitSystem : Editor
 	}
 
 
+	/* **** Fetch **** */
+
+	public static void Fetch(string remoteName)
+	{
+		string feedback = RunGitCmd("fetch --all --verbose --progress " + remoteName);
+
+		if ( feedback.Contains("Aborting") )
+		{
+			Debug.LogError(feedback);
+			Debug.LogError("Error fetching!");
+		}
+		else
+			Debug.Log(feedback);
+	}
+
+
 	/* **** GetModifiedFilesList **** */
 
 	public static string[] GetModifiedFilesList ()
@@ -343,7 +359,7 @@ public class GitSystem : Editor
 
 	public static string[] GetBranchList(bool includeCurrent)
 	{
-		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch"));
+		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch -a"));
 		List<string> modifiedBranchList = new List<string>();
 		string currentBranch = GetCurrentBranch();
 

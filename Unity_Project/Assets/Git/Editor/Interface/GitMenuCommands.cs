@@ -32,6 +32,13 @@ public class GitMenuCommands : MonoBehaviour {
 	}
 
 
+	[MenuItem ("Git/Fetch")]
+	static void GitFetch()
+	{
+		GitFetchWindow.Init();
+	}
+
+
 	[MenuItem ("Git/Resolve Conflicts (Unmerged)")]
 	static void GitResolveConflicts()
 	{
