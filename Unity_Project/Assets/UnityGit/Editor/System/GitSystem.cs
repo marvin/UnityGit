@@ -140,10 +140,10 @@ public class GitSystem : Editor
 	{
 		string feedback = RunGitCmd("push --verbose --progress --porcelain " + remoteName + " " + GetCurrentBranch());
 
-		if ( feedback != "" )
-			Debug.Log("Push " + feedback);
+		if ( feedback.Contains("[rejected]") )
+			Debug.LogError("Push error: " + feedback);
 		else
-			Debug.LogError("Push error!");
+			Debug.Log("Push " + feedback);
 	}
 
 
