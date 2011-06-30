@@ -141,7 +141,7 @@ public class GitSystem : Editor
 		string feedback = RunGitCmd("push -v -p " + remoteName + " " + GetCurrentBranch());
 
 		if ( feedback == "" )
-			Debug.Log("Successful!");
+			Debug.Log("Push successful!");
 		else
 			Debug.LogError(feedback);
 	}
