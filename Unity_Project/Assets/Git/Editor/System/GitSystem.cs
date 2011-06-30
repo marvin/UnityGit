@@ -138,7 +138,7 @@ public class GitSystem : Editor
 
 	public static void Push(string remoteName)
 	{
-		string feedback = RunGitCmd("push -v " + remoteName + " " + GetCurrentBranch());
+		string feedback = RunGitCmd("push --verbose --progress --porcelain " + remoteName + " " + GetCurrentBranch());
 
 		if ( feedback == "" )
 			Debug.Log("Push successful!");
