@@ -22,4 +22,7 @@ public class UnityGitHelper : MonoBehaviour {
 
 		AssetDatabase.Refresh();
 	}
+
+
+	// Simple comment for testing...
 }
