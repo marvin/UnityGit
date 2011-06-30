@@ -138,7 +138,12 @@ public class GitSystem : Editor
 
 	public static void Push(string remoteName)
 	{
-		Debug.Log(RunGitCmd("push -v -p " + remoteName + " " + GetCurrentBranch()));
+		string feedback = RunGitCmd("push -v -p " + remoteName + " " + GetCurrentBranch());
+
+		if ( feedback == "" )
+			Debug.Log("Successful!");
+		else
+			Debug.LogError(feedback);
 	}
 
 
