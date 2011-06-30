@@ -404,6 +404,7 @@ public class GitSystem : Editor
 	public static void MergeBranch(string branchName)
 	{
 		Debug.Log(RunGitCmd("merge " + branchName));
+		UnityGitHelper.CleanupUntracked();
 
 		AssetDatabase.Refresh();
 	}

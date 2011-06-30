@@ -8,11 +8,11 @@ public class UnityGitHelper : MonoBehaviour {
 	{
 		Debug.Log(GitSystem.RunGitCmd("clean -d -f"));
 
-		UnityGitHelper.UnityCleanupUntracked(GitSystem.GetUntrackedFilesList(false));
+		UnityGitHelper.CleanupUntracked(GitSystem.GetUntrackedFilesList(false));
 	}
 
 
-	static void UnityCleanupUntracked(string[] untrackedFiles)
+	static void CleanupUntracked(string[] untrackedFiles)
 	{
 		foreach ( string path in untrackedFiles)
 		{
@@ -20,6 +20,6 @@ public class UnityGitHelper : MonoBehaviour {
 			AssetDatabase.DeleteAsset(path);
 		}
 
-		AssetDatabase.Refresh(ImportAssetOptions.Default);
+		AssetDatabase.Refresh();
 	}
 }
