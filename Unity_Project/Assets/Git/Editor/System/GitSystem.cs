@@ -14,7 +14,6 @@ public class GitSystem : Editor
 {
 	public static string currentRemote = "";
 
-	[MenuItem("Git/Init New Repo")]
 	public static void InitNewRepo ()
 	{
 		string repoPath = GetRepoPath ();

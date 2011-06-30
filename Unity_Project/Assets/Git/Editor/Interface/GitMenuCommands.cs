@@ -4,6 +4,13 @@ using UnityEditor;
 using System.Collections;
 
 public class GitMenuCommands : MonoBehaviour {
+	[MenuItem("Git/Init New Repo")]
+	static void InitNewRepo()
+	{
+		GitSystem.InitNewRepo();
+	}
+
+
 	[MenuItem ("Git/Commit %#c")]
 	static void GitCommit()
 	{
@@ -11,7 +18,7 @@ public class GitMenuCommands : MonoBehaviour {
 	}
 
 
-	[MenuItem("Git/Commit All %#&c")]
+	[MenuItem("Git/Quick Commit All %#&c")]
 	static void CommitAll()
 	{
 		GitSystem.CommitAll();
@@ -39,7 +46,7 @@ public class GitMenuCommands : MonoBehaviour {
 	}
 
 
-	[MenuItem ("Git/Resolve Conflicts (Unmerged)")]
+	[MenuItem ("Git/Resolve Conflicts")]
 	static void GitResolveConflicts()
 	{
 		GitConflictsWindow.Init();
