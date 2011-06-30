@@ -16,6 +16,7 @@ public class GitConflictsWindow : EditorWindow
 		public List<string> hashCodes = new List<string>();
 		public List<string> locationCodes = new List<string>();
 		public bool useMine = true;
+		public GitDiffWindow diffWindow;
 	}
 	Dictionary<string, ConflictData> conflicts = new Dictionary<string, ConflictData>();
 
@@ -81,12 +82,16 @@ public class GitConflictsWindow : EditorWindow
 
 				if ( GUILayout.Button("Diff") )
 				{
-					ShowDiff(GitSystem.RunGitCmd("diff " + conflict.fileName));
+					conflict.diffWindow = GitDiffWindow.Init(GitSystem.RunGitCmd("diff --word-diff=porcelain " + conflict.fileName));
 				}
 
 				if ( GUILayout.Button("Resolve") )
 				{
 					GitSystem.ResolveConflict(conflict.fileName, conflict.useMine);
+
+					if ( conflict.diffWindow != null )
+						conflict.diffWindow.Close();
+
 					conflicts.Remove(key);
 					return;
 				}
@@ -114,32 +119,5 @@ public class GitConflictsWindow : EditorWindow
 		{
 			GUILayout.Label("No conflicts found.");
 		}
-	}
-
-
-	void ShowDiff(string diff)
-	{
-		string[] lines = diff.Split('\n');
-		int showingFlag = 0; // 0 = None, 1 = Ours, 2 = Theirs
-		string ours = "";
-		string theirs = "";
-
-		for ( int i = 0; i < lines.Length; i++ )
-		{
-			if ( lines[i].Contains("++<<<<<<<") )
-				showingFlag = 1;
-			else if ( lines[i].Contains("++=======") )
-				showingFlag = 2;
-			else if ( lines[i].Contains("++>>>>>>>") )
-				showingFlag = 0;
-			else if ( showingFlag == 1 )
-				ours += lines[i] + "\n";
-			else if ( showingFlag == 2 )
-				theirs += lines[i] + "\n";
-		}
-
-		Debug.Log(diff);
-		Debug.LogWarning(ours);
-		Debug.LogError(theirs);
 	}
 }
