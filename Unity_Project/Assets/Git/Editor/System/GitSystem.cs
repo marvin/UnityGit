@@ -138,7 +138,7 @@ public class GitSystem : Editor
 
 	public static void Push(string remoteName)
 	{
-		RunGitCmd("push --verbose --progress " + remoteName + " " + GetCurrentBranch());
+		RunGitCmd("push -v -p " + remoteName + " " + GetCurrentBranch());
 	}
 
 
