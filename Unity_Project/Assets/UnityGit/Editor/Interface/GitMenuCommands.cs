@@ -3,7 +3,8 @@ using UnityEditor;
 
 using System.Collections;
 
-public class GitMenuCommands : MonoBehaviour {
+public class GitMenuCommands : MonoBehaviour
+{
 	[MenuItem("Git/Init New Repo")]
 	static void InitNewRepo()
 	{

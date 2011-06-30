@@ -5,7 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-public class GitCreateBranchWindow : EditorWindow {
+public class GitCreateBranchWindow : EditorWindow
+{
 	public static GitCreateBranchWindow Instance { get; private set; }
 
 	string newBranchName = "";
@@ -13,7 +14,8 @@ public class GitCreateBranchWindow : EditorWindow {
 	string[] existingBranches = null;
 
 
-	public static void Init () {
+	public static void Init ()
+	{
 		// Get existing open window or if none, make a new one:
 		Instance = EditorWindow.GetWindow<GitCreateBranchWindow>(true, "Git Create Branch");
 
@@ -21,7 +23,8 @@ public class GitCreateBranchWindow : EditorWindow {
 	}
 
 
-	void OnGUI() {
+	void OnGUI()
+	{
 		bool branchTaken = false;
 		Color defaultColor = GUI.contentColor;
 		bool enterPressed = (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Return)? true : false;
@@ -33,8 +36,10 @@ public class GitCreateBranchWindow : EditorWindow {
 		checkoutAfterCreation = GUILayout.Toggle(checkoutAfterCreation, "Checkout");
 
 		// Make sure we don't already have that branch
-		foreach ( string branch in existingBranches ) {
-			if ( branch == newBranchName ) {
+		foreach ( string branch in existingBranches )
+		{
+			if ( branch == newBranchName )
+			{
 				branchTaken = true;
 				break;
 			}
@@ -49,8 +54,10 @@ public class GitCreateBranchWindow : EditorWindow {
 
 		GUI.contentColor = defaultColor;
 
-		if ( enterPressed || GUILayout.Button("Create Branch", GUILayout.MaxWidth(100)) ) {
-			if ( !branchTaken ) {
+		if ( enterPressed || GUILayout.Button("Create Branch", GUILayout.MaxWidth(100)) )
+		{
+			if ( !branchTaken )
+			{
 				GitSystem.CreateBranch(Regex.Replace(newBranchName, @"\s", "_"), checkoutAfterCreation);
 				Close();
 			}

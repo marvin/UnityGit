@@ -3,7 +3,8 @@ using UnityEditor;
 
 using System.Collections;
 
-public class UnityGitHelper : MonoBehaviour {
+public class UnityGitHelper : MonoBehaviour
+{
 	public static void CleanupUntracked()
 	{
 		Debug.Log(GitSystem.RunGitCmd("clean -d -f"));

@@ -4,7 +4,8 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GitCommitWindow : EditorWindow {
+public class GitCommitWindow : EditorWindow
+{
 	public static GitCommitWindow Instance { get; private set; }
 
 	string[] modifiedFiles = GitSystem.GetModifiedFilesList();
@@ -18,7 +19,8 @@ public class GitCommitWindow : EditorWindow {
 	string commitMessage = "";
 
 
-	public static void Init () {
+	public static void Init ()
+	{
 		int fileCount = 0;
 
 		// Get existing open window or if none, make a new one:
@@ -49,23 +51,28 @@ public class GitCommitWindow : EditorWindow {
 
 	Vector2 scrollPosition = Vector2.zero;
 
-	void OnGUI() {
-		if ( somethingToCommit ) {
+	void OnGUI()
+	{
+		if ( somethingToCommit )
+		{
 			Color baseContentColor = GUI.contentColor;
 
 			scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.MaxHeight(250));
 			GUI.contentColor = Color.cyan;
-			for ( int i = 0; i < modifiedFiles.Length; i++ ) {
+			for ( int i = 0; i < modifiedFiles.Length; i++ )
+			{
 				commitModifiedFiles[i] = GUILayout.Toggle(commitModifiedFiles[i], modifiedFiles[i]);
 			}
 
 			GUI.contentColor = baseContentColor;
-			for ( int i = 0; i < untrackedFiles.Length; i++ ) {
+			for ( int i = 0; i < untrackedFiles.Length; i++ )
+			{
 				commitUntrackedFiles[i] = GUILayout.Toggle(commitUntrackedFiles[i], untrackedFiles[i]);
 			}
 
 			GUI.contentColor = Color.red;
-			for ( int i = 0; i < deletedFiles.Length; i++ ) {
+			for ( int i = 0; i < deletedFiles.Length; i++ )
+			{
 				commitDeletedFiles[i] = GUILayout.Toggle(commitDeletedFiles[i], deletedFiles[i]);
 			}
 			GUILayout.EndScrollView();
@@ -73,7 +80,8 @@ public class GitCommitWindow : EditorWindow {
 			// Select All and None
 			GUI.contentColor = baseContentColor;
 			GUILayout.BeginHorizontal();
-			if ( GUILayout.Button("Select All", GUILayout.MaxWidth(100)) ) {
+			if ( GUILayout.Button("Select All", GUILayout.MaxWidth(100)) )
+			{
 				for ( int i = 0; i < commitModifiedFiles.Length; i++ )
 					commitModifiedFiles[i] = true;
 				
@@ -83,7 +91,8 @@ public class GitCommitWindow : EditorWindow {
 				for ( int i = 0; i < commitDeletedFiles.Length; i++ )
 					commitDeletedFiles[i] = true;
 			}
-			else if ( GUILayout.Button("Select None", GUILayout.MaxWidth(100)) ) {
+			else if ( GUILayout.Button("Select None", GUILayout.MaxWidth(100)) )
+			{
 				for ( int i = 0; i < commitModifiedFiles.Length; i++ )
 					commitModifiedFiles[i] = false;
 				
@@ -100,13 +109,16 @@ public class GitCommitWindow : EditorWindow {
 			commitMessage = GUILayout.TextArea(commitMessage, GUILayout.MinHeight(45));
 
 			// Commit and Cancel
-			if ( commitMessage != "" ) {
+			if ( commitMessage != "" )
+			{
 				GUILayout.Label("");
 				GUILayout.BeginHorizontal();
-				if ( GUILayout.Button("Cancel", GUILayout.MaxWidth(100)) ) {
+				if ( GUILayout.Button("Cancel", GUILayout.MaxWidth(100)) )
+				{
 					Close();
 				}
-				else if ( GUILayout.Button("Commit", GUILayout.MaxWidth(100)) ) {
+				else if ( GUILayout.Button("Commit", GUILayout.MaxWidth(100)) )
+				{
 					DoCommit();
 					Close();
 				}
@@ -119,24 +131,31 @@ public class GitCommitWindow : EditorWindow {
 	}
 
 
-	void DoCommit() {
+	void DoCommit()
+	{
 		List<string> addFiles = new List<string>();
 		List<string> removeFiles = new List<string>();
 
-		for ( int i = 0; i < modifiedFiles.Length; i++ ) {
-			if ( commitModifiedFiles[i] ) {
+		for ( int i = 0; i < modifiedFiles.Length; i++ )
+		{
+			if ( commitModifiedFiles[i] )
+			{
 				addFiles.Add(modifiedFiles[i]);
 			}
 		}
 
-		for ( int i = 0; i < untrackedFiles.Length; i++ ) {
-			if ( commitUntrackedFiles[i] ) {
+		for ( int i = 0; i < untrackedFiles.Length; i++ )
+		{
+			if ( commitUntrackedFiles[i] )
+			{
 				addFiles.Add(untrackedFiles[i]);
 			}
 		}
 
-		for ( int i = 0; i < deletedFiles.Length; i++ ) {
-			if ( commitDeletedFiles[i] ) {
+		for ( int i = 0; i < deletedFiles.Length; i++ )
+		{
+			if ( commitDeletedFiles[i] )
+			{
 				removeFiles.Add(deletedFiles[i]);
 			}
 		}

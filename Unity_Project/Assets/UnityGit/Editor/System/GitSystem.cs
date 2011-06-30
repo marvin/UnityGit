@@ -19,7 +19,8 @@ public class GitSystem : Editor
 	{
 		string repoPath = GetRepoPath ();
 		
-		if (repoPath == "") {
+		if (repoPath == "")
+		{
 			repoPath = EditorUtility.OpenFolderPanel ("Choose a repo directory", "", "");
 			
 			if (repoPath == "" || repoPath == null)

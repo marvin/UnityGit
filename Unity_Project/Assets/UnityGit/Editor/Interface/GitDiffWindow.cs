@@ -4,7 +4,8 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GitDiffWindow : EditorWindow {
+public class GitDiffWindow : EditorWindow
+{
 	public static GitDiffWindow Instance { get; private set; }
 
 	class DiffData
