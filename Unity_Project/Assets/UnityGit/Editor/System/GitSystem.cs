@@ -13,6 +13,7 @@ using Debug = UnityEngine.Debug;
 public class GitSystem : Editor
 {
 	public static string currentRemote = "";
+	public delegate void CommandOutput(string data, bool isDone);
 
 	public static void InitNewRepo ()
 	{
@@ -141,7 +142,7 @@ public class GitSystem : Editor
 		string feedback = RunGitCmd("push --verbose --progress --porcelain " + remoteName + " " + GetCurrentBranch());
 
 		if ( feedback.Contains("[rejected]") )
-			Debug.LogError("Push error: " + feedback);
+			Debug.LogError("Push error: " + feedback + "\n\nTry pulling first.");
 		else
 			Debug.Log("Push " + feedback);
 	}
@@ -151,8 +152,12 @@ public class GitSystem : Editor
 
 	public static void Pull(string remoteName)
 	{
-		string feedback = RunGitCmd("pull " + remoteName + " " + GetCurrentBranch());
-		string[] unmergedFiles;
+		Pull(remoteName, null);
+	}
+
+	public static void Pull(string remoteName, CommandOutput outputDelegate)
+	{
+		string feedback = RunGitCmd("pull " + remoteName + " " + GetCurrentBranch(), true, outputDelegate);
 
 		if ( feedback.Contains("Aborting") )
 		{
@@ -161,8 +166,12 @@ public class GitSystem : Editor
 		}
 		else
 			Debug.Log(feedback);
+	}
 
-		unmergedFiles = GetUnmergedFilesList();
+
+	public static void PostPull()
+	{
+		string[] unmergedFiles = GetUnmergedFilesList();
 
 		if ( unmergedFiles.Length > 0 )
 			GitConflictsWindow.Init(unmergedFiles);
@@ -468,15 +477,28 @@ public class GitSystem : Editor
 
 	public static string RunGitCmd (string command, bool includeGitDir)
 	{
+		return RunGitCmd(command, includeGitDir, null);
+	}
+
+
+	static Process proc = null;
+		
+	public static string RunGitCmd (string command, bool includeGitDir, CommandOutput outputDelegate)
+	{
 		string cmd = GetGitExePath();
 		string repoPath = GetRepoPath();
 
+		if ( proc != null )
+		{
+			Debug.LogWarning("You must wait for previous processes to finish!");
+		}
+
 		if ( cmd != "" )
 		{
-			Process proc = new Process ();
 			ProcessStartInfo startInfo = new ProcessStartInfo (cmd);
-			StreamReader streamReader;
 			string result;
+
+			proc = new Process();
 
 			if ( includeGitDir )
 				command = "--git-dir=\"" + repoPath + "/.git\" --work-tree=\"" + repoPath + "\" " + command;
@@ -492,19 +514,66 @@ public class GitSystem : Editor
 		
 			proc.Start ();
 		
-			streamReader = proc.StandardOutput;
-		
-			while (!proc.HasExited)
-				Thread.Sleep (0);
-		
-			result = streamReader.ReadToEnd ();
-		
-			proc.Close ();
+			if ( outputDelegate == null )
+			{
+				StreamReader streamReader = proc.StandardOutput;
 
-			return result;
+				while (!proc.HasExited)
+				{
+					Thread.Sleep (0);
+
+					result = streamReader.ReadToEnd ();
+		
+					proc.Close();
+					proc = null;
+
+					return result;
+				}
+			}
+			else
+			{
+				ThreadPool.QueueUserWorkItem(ThreadedUpdateProcess, outputDelegate);
+				return "Threaded Process";
+			}
 		}
 
 		return "No Git.exe path defined!";
+	}
+
+
+	static void ThreadedUpdateProcess(object outputDelegateObj)
+	{
+		CommandOutput outputDelegate = (CommandOutput)outputDelegateObj;
+		StreamReader streamReader = proc.StandardOutput;
+		int count = 0;
+
+		while (!proc.HasExited)
+		{
+			Thread.Sleep (0);
+
+			count = streamReader.Peek();
+
+			if ( count > 0 )
+			{
+				char[] bytes = new char[count];
+				streamReader.ReadBlock(bytes, 0, count);
+				outputDelegate(new string(bytes), false);
+			}
+		}
+
+		count = streamReader.Peek();
+
+		if ( count > 0 )
+		{
+			char[] bytes = new char[count];
+			streamReader.ReadBlock(bytes, 0, count);
+			outputDelegate(new string(bytes), true);
+		}
+		else
+			outputDelegate("", true);
+		
+		proc.Close();
+		proc = null;
 	}
 
 
@@ -547,14 +616,5 @@ public class GitSystem : Editor
 		}
 
 		return "";
-	}
-
-
-	/* **** Git Help **** */
-
-	[MenuItem("Git/Help")]
-	static void ShowGitHelp ()
-	{
-		RunGitCmd ("help git");
 	}
 }

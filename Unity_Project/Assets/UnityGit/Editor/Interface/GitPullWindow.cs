@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,6 +10,10 @@ public class GitPullWindow : EditorWindow {
 
 	int remoteSelection = 0;
 	string[] remotes;
+
+	bool progressMode = false;
+	bool doPostPull = false;
+	string progressString = "";
 
 	public static void Init () {
 		// Get existing open window or if none, make a new one:
@@ -24,13 +29,36 @@ public class GitPullWindow : EditorWindow {
 	}
 
 
-	void OnGUI() {
-		remoteSelection = EditorGUILayout.Popup(remoteSelection, remotes);
-		GitSystem.currentRemote = remotes[remoteSelection];
+	void OnGUI()
+	{
+		if ( progressMode )
+		{
+			GUILayout.Label(progressString);
 
-		if ( GUILayout.Button("Pull", GUILayout.MaxWidth(100)) ) {
-			GitSystem.Pull(remotes[remoteSelection]);
-			Close();
+			if ( doPostPull )
+			{
+				doPostPull = false;
+				GitSystem.PostPull();
+			}
 		}
+		else
+		{
+			remoteSelection = EditorGUILayout.Popup(remoteSelection, remotes);
+			GitSystem.currentRemote = remotes[remoteSelection];
+
+			if ( GUILayout.Button("Pull", GUILayout.MaxWidth(100)) ) {
+				GitSystem.Pull(remotes[remoteSelection], ProgressReceiver);
+				progressMode = true;
+			}
+		}
+	}
+
+
+	void ProgressReceiver(string progressUpdate, bool isDone)
+	{
+		progressString += progressUpdate;
+
+		if ( isDone )
+			doPostPull = true;
 	}
 }

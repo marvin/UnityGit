@@ -100,6 +100,7 @@ public class GitMenuCommands : MonoBehaviour {
 	[MenuItem ("Git/Cleanup/Untracked And Ignored")]
 	static void CleanupUntrackedAndIgnored()
 	{
+		Debug.LogWarning("This feature partially implemented, it only cleared untracked, but not ignored files...");
 		UnityGitHelper.CleanupUntracked();
 	}
 
@@ -109,6 +110,7 @@ public class GitMenuCommands : MonoBehaviour {
 	{
 		Debug.Log(GitSystem.RunGitCmd("clean -d -X -f"));
 
+		Debug.LogWarning("This feature not yet implemented...");
 //		UnityGitHelper.UnityCleanupUntracked(GitSystem.GetUntrackedFilesList(false));
 	}
 
@@ -117,5 +119,14 @@ public class GitMenuCommands : MonoBehaviour {
 	static void TestFunc ()
 	{
 		Debug.Log (GitSystem.RunGitCmd ("ls-files --modified --exclude-standard"));
+	}
+
+
+	/* **** Git Help **** */
+
+	[MenuItem("Git/Help")]
+	static void ShowGitHelp ()
+	{
+		GitSystem.RunGitCmd ("help git");
 	}
 }
