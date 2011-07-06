@@ -39,12 +39,19 @@ public class GitDiffWindow : EditorWindow
 			{
 				for ( int i = 0; i < diffData.oursList.Count; i++ )
 				{
-					if ( diffData.oursList[i] != diffData.theirsList[i] )
-						GUI.contentColor = Color.yellow;
-					else
-						GUI.contentColor = Color.white;
+					try
+					{
+						if ( diffData.oursList[i] != diffData.theirsList[i] )
+							GUI.contentColor = Color.yellow;
+						else
+							GUI.contentColor = Color.white;
 
-					GUILayout.Label(diffData.oursList[i]);
+						GUILayout.Label(diffData.oursList[i]);
+					}
+					catch
+					{
+						Debug.Log((i+1) + " : " + diffData.theirsList.Count);
+					}
 				}
 			}
 			GUILayout.EndScrollView();
