@@ -3,8 +3,3 @@ Temp
 *.pidb
 *.sln
 *.userprefs
-
-Unity_Project.csproj
-Unity_Project.pidb
-Unity_Project.sln
-Unity_Project.userprefs

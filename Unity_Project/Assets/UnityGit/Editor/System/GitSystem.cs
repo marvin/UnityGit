@@ -36,6 +36,7 @@ public class GitSystem : Editor
 		}
 		
 		Debug.Log (RunGitCmd ("init " + repoPath));
+		UnityGitHelper.CreateUnityGitIgnores();
 	}
 
 
@@ -101,13 +102,22 @@ public class GitSystem : Editor
 
 	public static void Commit(string commitMessage, string[] addFiles, string[] removeFiles)
 	{
+		string feedback = "";
+
 		foreach (string path in addFiles)
 			RunGitCmd ("add \"" + path + "\"");
 
 		foreach (string path in removeFiles)
 			RunGitCmd ("rm \"" + path + "\"");
 
-		Debug.Log (RunGitCmd ("commit -m \"" + commitMessage + "\""));
+		feedback = RunGitCmd ("commit -m \"" + commitMessage + "\"");
+		Debug.Log(feedback);
+
+		if ( feedback == "" )
+		{
+			feedback = RunGitCmd ("commit -m \"" + commitMessage + "\"");
+			Debug.Log(feedback);
+		}
 
 		RunGitCmd("gc --auto");
 	}
