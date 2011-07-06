@@ -4,7 +4,8 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GitCheckoutBranchWindow : EditorWindow {
+public class GitCheckoutBranchWindow : EditorWindow
+{
 	public static GitCheckoutBranchWindow Instance { get; private set; }
 
 	int selection = 0;
@@ -12,15 +13,18 @@ public class GitCheckoutBranchWindow : EditorWindow {
 	string[] branches = null;
 
 
-	public static void Init () {
+	public static void Init ()
+	{
 		// Get existing open window or if none, make a new one:
 		Instance = EditorWindow.GetWindow<GitCheckoutBranchWindow>(true, "Git Checkout Branch");
 
 		Instance.currentBranch = GitSystem.GetCurrentBranch();
 		Instance.branches = GitSystem.GetBranchList();
 
-		for ( int i = 0; i < Instance.branches.Length; i++ ) {
-			if ( Instance.branches[i] == Instance.currentBranch ) {
+		for ( int i = 0; i < Instance.branches.Length; i++ )
+		{
+			if ( Instance.branches[i] == Instance.currentBranch )
+			{
 				Instance.selection = i;
 				break;
 			}
@@ -30,7 +34,8 @@ public class GitCheckoutBranchWindow : EditorWindow {
 
 	bool doCheckout = false;
 
-	void OnGUI() {
+	void OnGUI()
+	{
 		if ( !doCheckout )
 		{
 			bool currentBranchSelected = false;
@@ -38,7 +43,8 @@ public class GitCheckoutBranchWindow : EditorWindow {
 
 			selection = EditorGUILayout.Popup(selection, branches);
 
-			if ( branches[selection] == currentBranch ) {
+			if ( branches[selection] == currentBranch )
+			{
 				currentBranchSelected = true;
 
 				GUI.contentColor = Color.yellow;

@@ -3,7 +3,8 @@ using UnityEditor;
 
 using System.Collections;
 
-public class GitMenuCommands : MonoBehaviour {
+public class GitMenuCommands : MonoBehaviour
+{
 	[MenuItem("Git/Init New Repo")]
 	static void InitNewRepo()
 	{
@@ -115,12 +116,20 @@ public class GitMenuCommands : MonoBehaviour {
 	}
 
 
+	/* **** Standard ignore files **** */
+
+	[MenuItem("Git/Ignore/Create Unity Ignore Files")]
+	static void CreateIgnoreFiles()
+	{
+		UnityGitHelper.CreateUnityGitIgnores();
+	}
+
+
 	[MenuItem("Git/Test")]
 	static void TestFunc ()
 	{
 		Debug.Log (GitSystem.RunGitCmd ("ls-files --modified --exclude-standard"));
 	}
-
 
 	/* **** Git Help **** */
 
