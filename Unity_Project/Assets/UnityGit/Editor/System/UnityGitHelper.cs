@@ -28,14 +28,53 @@ public class UnityGitHelper : MonoBehaviour
 
 	public static void CreateUnityGitIgnores()
 	{
-		string libraryPath = Application.dataPath + "../Library/.gitignore";
-		string projectPath = Application.dataPath + "../.gitignore";
-		string libraryContents = "/*\n!/.gitignore\n!/EditorBuildSettings.asset\n!/InputManager.asset\n!/ProjectSettings.asset\n!/QualitySettings.asset\n!/TagManager.asset\n!/TimeManager.asset\n!/AudioManager.asset\n!/DynamicsManager.asset\n!/NetworkManager.asset";
-		string projectContents = "Temp\n*.csproj\n*.pidb\n*.sln\n*.userprefs";
+		string libraryPath = Application.dataPath + "/../Library/.gitignore";
+		string projectPath = Application.dataPath + "/../.gitignore";
+		string libraryContents = "";
+		string projectContents = "";
+		string[] libraryContentsArray =
+		{
+			"/*",
+			"!.gitignore",
+			"!EditorBuildSettings.asset",
+			"!InputManager.asset",
+			"!ProjectSettings.asset",
+			"!QualitySettings.asset",
+			"!TagManager.asset",
+			"!TimeManager.asset",
+			"!AudioManager.asset",
+			"!DynamicsManager.asset",
+			"!NetworkManager.asset"
+		};
 
+		string[] projectContentsArray =
+		{
+			"Temp",
+			"*.csproj",
+			"*.pidb",
+			"*.sln",
+			"*.userprefs"
+		};
+
+		for ( int i = 0; i < libraryContentsArray.Length; i++ )
+		{
+			libraryContents += libraryContentsArray[i] + "\r";
+		}
+
+		for ( int i = 0; i < projectContentsArray.Length; i++ )
+		{
+			projectContents += projectContentsArray[i] + "\r";
+		}
+
+		File.WriteAllLines(libraryPath, libraryContentsArray);
+		File.WriteAllLines(projectPath, projectContentsArray);
+//		File.WriteAllText(libraryPath, libraryContents);
+//		File.WriteAllText(projectPath, projectContents);
+/*
 		Debug.Log(libraryPath);
 		Debug.Log(projectPath);
 		Debug.Log(libraryContents);
 		Debug.Log(projectContents);
+*/
 	}
 }

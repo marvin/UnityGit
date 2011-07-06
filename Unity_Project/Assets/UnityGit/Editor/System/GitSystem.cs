@@ -36,6 +36,7 @@ public class GitSystem : Editor
 		}
 		
 		Debug.Log (RunGitCmd ("init " + repoPath));
+		UnityGitHelper.CreateUnityGitIgnores();
 	}
 
 
