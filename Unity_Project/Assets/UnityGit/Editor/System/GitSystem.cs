@@ -111,9 +111,13 @@ public class GitSystem : Editor
 			RunGitCmd ("rm \"" + path + "\"");
 
 		feedback = RunGitCmd ("commit -m \"" + commitMessage + "\"");
+		Debug.Log(feedback);
 
 		if ( feedback == "" )
+		{
 			feedback = RunGitCmd ("commit -m \"" + commitMessage + "\"");
+			Debug.Log(feedback);
+		}
 
 		RunGitCmd("gc --auto");
 	}
