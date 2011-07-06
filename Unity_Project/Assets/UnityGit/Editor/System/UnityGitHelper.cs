@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
+using System.IO;
 using System.Collections;
 
 public class UnityGitHelper : MonoBehaviour
@@ -22,5 +23,19 @@ public class UnityGitHelper : MonoBehaviour
 		}
 
 		AssetDatabase.Refresh();
+	}
+
+
+	public static void CreateUnityGitIgnores()
+	{
+		string libraryPath = Application.dataPath + "../Library/.gitignore";
+		string projectPath = Application.dataPath + "../.gitignore";
+		string libraryContents = "/*\n!/.gitignore\n!/EditorBuildSettings.asset\n!/InputManager.asset\n!/ProjectSettings.asset\n!/QualitySettings.asset\n!/TagManager.asset\n!/TimeManager.asset\n!/AudioManager.asset\n!/DynamicsManager.asset\n!/NetworkManager.asset";
+		string projectContents = "Temp\n*.csproj\n*.pidb\n*.sln\n*.userprefs";
+
+		Debug.Log(libraryPath);
+		Debug.Log(projectPath);
+		Debug.Log(libraryContents);
+		Debug.Log(projectContents);
 	}
 }
