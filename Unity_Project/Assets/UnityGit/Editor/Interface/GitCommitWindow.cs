@@ -107,6 +107,8 @@ public class GitCommitWindow : EditorWindow
 			GUILayout.Label("");
 			GUILayout.Label("Commit message:");
 			commitMessage = GUILayout.TextArea(commitMessage, GUILayout.MinHeight(45));
+			commitMessage = commitMessage.Replace("\"", "");
+			commitMessage = commitMessage.Replace("\'", "");
 
 			// Commit and Cancel
 			if ( commitMessage != "" )
