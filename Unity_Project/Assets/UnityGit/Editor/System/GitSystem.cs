@@ -113,8 +113,9 @@ public class GitSystem : Editor
 		feedback = RunGitCmd ("commit -m \"" + commitMessage + "\"");
 		Debug.Log(feedback);
 
-		if ( feedback == "" )
+		if ( feedback == "" ) // 
 		{
+
 			feedback = RunGitCmd ("commit -m \"" + commitMessage + "\"");
 			Debug.Log(feedback);
 		}
