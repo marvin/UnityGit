@@ -32,7 +32,7 @@ public class UnityGitHelper : MonoBehaviour
 		string projectPath = Application.dataPath + "/../.gitignore";
 		string[] libraryContentsArray =
 		{
-			"/*",
+			"*",
 			"!.gitignore",
 			"!EditorBuildSettings.asset",
 			"!InputManager.asset",
