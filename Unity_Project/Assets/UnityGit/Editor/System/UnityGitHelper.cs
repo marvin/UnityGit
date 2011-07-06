@@ -16,7 +16,7 @@ public class UnityGitHelper : MonoBehaviour
 
 	static void CleanupUntracked(string[] untrackedFiles)
 	{
-		foreach ( string path in untrackedFiles)
+		foreach ( string path in untrackedFiles )
 		{
 			Debug.Log(path);
 			AssetDatabase.DeleteAsset(path);
@@ -46,7 +46,6 @@ public class UnityGitHelper : MonoBehaviour
 			"!DynamicsManager.asset",
 			"!NetworkManager.asset"
 		};
-
 		string[] projectContentsArray =
 		{
 			"Temp",
