@@ -102,13 +102,18 @@ public class GitSystem : Editor
 
 	public static void Commit(string commitMessage, string[] addFiles, string[] removeFiles)
 	{
+		string feedback = "";
+
 		foreach (string path in addFiles)
 			RunGitCmd ("add \"" + path + "\"");
 
 		foreach (string path in removeFiles)
 			RunGitCmd ("rm \"" + path + "\"");
 
-		Debug.Log (RunGitCmd ("commit -m \"" + commitMessage + "\""));
+		feedback = RunGitCmd ("commit -m \"" + commitMessage + "\"");
+
+		if ( feedback == "" )
+			feedback = RunGitCmd ("commit -m \"" + commitMessage + "\"");
 
 		RunGitCmd("gc --auto");
 	}
