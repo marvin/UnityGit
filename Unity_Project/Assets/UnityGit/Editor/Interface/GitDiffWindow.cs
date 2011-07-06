@@ -50,7 +50,7 @@ public class GitDiffWindow : EditorWindow
 					}
 					catch
 					{
-						Debug.Log((i+1) + " : " + diffData.theirsList.Count);
+						Debug.Log(i + " : " + diffData.theirsList.Count);
 					}
 				}
 			}

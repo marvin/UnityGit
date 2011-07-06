@@ -30,8 +30,6 @@ public class UnityGitHelper : MonoBehaviour
 	{
 		string libraryPath = Application.dataPath + "/../Library/.gitignore";
 		string projectPath = Application.dataPath + "/../.gitignore";
-		string libraryContents = "";
-		string projectContents = "";
 		string[] libraryContentsArray =
 		{
 			"/*",
@@ -57,13 +55,5 @@ public class UnityGitHelper : MonoBehaviour
 
 		File.WriteAllLines(libraryPath, libraryContentsArray);
 		File.WriteAllLines(projectPath, projectContentsArray);
-//		File.WriteAllText(libraryPath, libraryContents);
-//		File.WriteAllText(projectPath, projectContents);
-/*
-		Debug.Log(libraryPath);
-		Debug.Log(projectPath);
-		Debug.Log(libraryContents);
-		Debug.Log(projectContents);
-*/
 	}
 }
