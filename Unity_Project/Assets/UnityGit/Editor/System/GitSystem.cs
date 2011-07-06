@@ -105,19 +105,20 @@ public class GitSystem : Editor
 		string feedback = "";
 
 		foreach (string path in addFiles)
-			RunGitCmd ("add \"" + path + "\"");
+			Debug.LogWarning("add: " + RunGitCmd ("add \"" + path + "\""));
 
 		foreach (string path in removeFiles)
-			RunGitCmd ("rm \"" + path + "\"");
+			Debug.LogWarning("rm: " + RunGitCmd ("rm \"" + path + "\""));
 
 		feedback = RunGitCmd ("commit -m \"" + commitMessage + "\"");
-		Debug.Log(feedback);
 
-		if ( feedback == "" ) // 
+		if ( feedback.Contains(commitMessage) )
 		{
-
-			feedback = RunGitCmd ("commit -m \"" + commitMessage + "\"");
 			Debug.Log(feedback);
+		}
+		else
+		{
+			Debug.LogError("Commit failed!");
 		}
 
 		RunGitCmd("gc --auto");
