@@ -125,10 +125,33 @@ public class GitMenuCommands : MonoBehaviour
 	}
 
 
+	[MenuItem("Git/Settings/CRLF/Show current mode")]
+	static void ShowCRLF ()
+	{
+		Debug.Log ("Auto CRLF mode: " + GitSystem.RunGitCmd ("config --get core.autocrlf"));
+	}
+
+
+	[MenuItem("Git/Settings/CRLF/Auto CRLF On")]
+	static void AutoCRLFOn ()
+	{
+		GitSystem.RunGitCmd ("config core.autocrlf true");
+		ShowCRLF();
+	}
+
+
+	[MenuItem("Git/Settings/CRLF/Auto CRLF Off")]
+	static void AutoCRLFOff ()
+	{
+		GitSystem.RunGitCmd ("config core.autocrlf false");
+		ShowCRLF();
+	}
+
+
 	[MenuItem("Git/Test")]
 	static void TestFunc ()
 	{
-		Debug.Log (GitSystem.RunGitCmd ("ls-files --modified --exclude-standard"));
+		Debug.Log (GitSystem.RunGitCmd ("config --get core.autocrlf"));
 	}
 
 	/* **** Git Help **** */
