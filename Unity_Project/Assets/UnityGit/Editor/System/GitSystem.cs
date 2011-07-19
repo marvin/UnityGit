@@ -114,12 +114,10 @@ public class GitSystem : Editor
 
 		if ( feedback.Contains(commitMessage) )
 		{
-			Debug.Log(feedback);
+//			Debug.Log(feedback);
 		}
-		else
-		{
-			Debug.LogError("Commit failed!");
-		}
+
+		Debug.Log(feedback);
 
 		RunGitCmd("gc --auto");
 	}
@@ -385,7 +383,7 @@ public class GitSystem : Editor
 
 	public static string[] GetBranchList(bool includeCurrent)
 	{
-		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch -a"));
+		string[] branches = RemoveEmptyListEntries (RunGitCmd ("branch")); // -r will give remote and -a will give both
 		List<string> modifiedBranchList = new List<string>();
 		string currentBranch = GetCurrentBranch();
 
