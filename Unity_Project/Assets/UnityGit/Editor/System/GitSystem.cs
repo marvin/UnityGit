@@ -338,6 +338,7 @@ public class GitSystem : Editor
 	public static bool IsRemoteLocal(string remoteName)
 	{
 		string[] results = RemoveEmptyListEntries(RunGitCmd("remote -v"));
+		string[] webUrlTypes = new string[] { "git://", "http://", "https://", "ssh://" };
 
 		foreach ( string result in results )
 		{
@@ -350,7 +351,18 @@ public class GitSystem : Editor
 
 				if ( remote == remoteName )
 				{
-					if ( address.Contains("@") )
+					bool isURL = false;
+
+					foreach ( string url in webUrlTypes )
+					{
+						if ( address.StartsWith(url) )
+						{
+							isURL = true;
+							break;
+						}
+					}
+
+					if ( address.Contains("@") || isURL )
 					{
 						return false;
 					}
