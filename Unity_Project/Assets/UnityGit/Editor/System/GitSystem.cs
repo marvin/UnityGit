@@ -150,12 +150,18 @@ public class GitSystem : Editor
 
 	public static void Push(string remoteName)
 	{
-		string feedback = RunGitCmd("push --verbose --progress --porcelain " + remoteName + " " + GetCurrentBranch());
+		if ( IsRemoteLocal(remoteName) )
+		{
+			Debug.Log(true);
+			string feedback = RunGitCmd("push --verbose --progress --porcelain " + remoteName + " " + GetCurrentBranch());
 
-		if ( feedback.Contains("[rejected]") )
-			Debug.LogError("Push error: " + feedback + "\n\nTry pulling first.");
+			if ( feedback.Contains("[rejected]") )
+				Debug.LogError("Push error: " + feedback + "\n\nTry fetch or pull first.");
+			else
+				Debug.Log("Push " + feedback);
+		}
 		else
-			Debug.Log("Push " + feedback);
+			Debug.Log("Sorry, UnityGit can only push to a local git repo for now.");
 	}
 
 
@@ -168,15 +174,20 @@ public class GitSystem : Editor
 
 	public static void Pull(string remoteName, CommandOutput outputDelegate)
 	{
-		string feedback = RunGitCmd("pull " + remoteName + " " + GetCurrentBranch(), true, outputDelegate);
-
-		if ( feedback.Contains("Aborting") )
+		if ( IsRemoteLocal(remoteName) )
 		{
-			Debug.LogError(feedback);
-			Debug.LogError("Error pulling!");
+			string feedback = RunGitCmd("pull " + remoteName + " " + GetCurrentBranch(), true, outputDelegate);
+
+			if ( feedback.Contains("Aborting") )
+			{
+				Debug.LogError(feedback);
+				Debug.LogError("Error pulling!");
+			}
+			else
+				Debug.Log(feedback);
 		}
 		else
-			Debug.Log(feedback);
+			Debug.Log("Sorry, UnityGit can only pull from a local git repo for now.");
 	}
 
 
@@ -195,15 +206,20 @@ public class GitSystem : Editor
 
 	public static void Fetch(string remoteName)
 	{
-		string feedback = RunGitCmd("fetch --all --verbose --progress " + remoteName);
-
-		if ( feedback.Contains("Aborting") )
+		if ( IsRemoteLocal(remoteName) )
 		{
-			Debug.LogError(feedback);
-			Debug.LogError("Error fetching!");
+			string feedback = RunGitCmd("fetch --all --verbose --progress " + remoteName);
+
+			if ( feedback.Contains("Aborting") )
+			{
+				Debug.LogError(feedback);
+				Debug.LogError("Error fetching!");
+			}
+			else
+				Debug.Log(feedback);
 		}
 		else
-			Debug.Log(feedback);
+			Debug.Log("Sorry, UnityGit can only fetch from a local git repo for now.");
 	}
 
 
@@ -310,11 +326,40 @@ public class GitSystem : Editor
 	}
 
 
-	/* **** GetDeletedFilesList **** */
+	/* **** GetRemotesList **** */
 
 	public static string[] GetRemotesList ()
 	{
 		return RemoveEmptyListEntries(RunGitCmd("remote"));
+	}
+
+
+	/* **** Checks to see if the remote is local or a web address **** */
+
+	public static bool IsRemoteLocal(string remoteName)
+	{
+		string[] results = RemoveEmptyListEntries(RunGitCmd("remote -v"));
+
+		foreach ( string result in results )
+		{
+			string[] splitData = result.Split('\t');
+
+			if ( splitData.Length > 1 )
+			{
+				string remote = splitData[0];
+				string address = splitData[1];
+
+				if ( remote == remoteName )
+				{
+					if ( address.Contains("@") )
+					{
+						return false;
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 
 
@@ -489,6 +534,12 @@ public class GitSystem : Editor
 	public static string RunGitCmd (string command, bool includeGitDir)
 	{
 		return RunGitCmd(command, includeGitDir, null);
+	}
+
+
+	public static string RunGitCmd (string command, CommandOutput outputDelegate)
+	{
+		return RunGitCmd(command, true, outputDelegate);
 	}
 
 
