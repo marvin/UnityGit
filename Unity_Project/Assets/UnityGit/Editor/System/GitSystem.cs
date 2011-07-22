@@ -18,7 +18,7 @@ public class GitSystem : Editor
 	public static void InitNewRepo ()
 	{
 		string repoPath = GetRepoPath ();
-		
+
 		if (repoPath == "")
 		{
 			repoPath = EditorUtility.OpenFolderPanel ("Choose a repo directory", "", "");
@@ -118,8 +118,6 @@ public class GitSystem : Editor
 		}
 
 		Debug.Log(feedback);
-
-		RunGitCmd("gc --auto");
 	}
 
 
@@ -534,6 +532,14 @@ public class GitSystem : Editor
 	}
 
 
+	/* **** GC **** */
+
+	public static void GC()
+	{
+		RunGitCmd("gc");
+	}
+
+
 	/* **** RunGitCmd **** */
 
 	public static string RunGitCmd (string command)
@@ -576,6 +582,7 @@ public class GitSystem : Editor
 			if ( includeGitDir )
 				command = "--git-dir=\"" + repoPath + "/.git\" --work-tree=\"" + repoPath + "\" " + command;
 
+//			startInfo.Arguments = "cd.. && cd.. && " + command;
 			startInfo.Arguments = command;
 		
 			startInfo.UseShellExecute = false;

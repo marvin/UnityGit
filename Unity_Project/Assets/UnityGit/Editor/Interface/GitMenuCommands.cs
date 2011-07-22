@@ -12,7 +12,7 @@ public class GitMenuCommands : MonoBehaviour
 	}
 
 
-	[MenuItem ("Git/Commit %#c")]
+	[MenuItem ("Git/Commit &#c")]
 	static void GitCommit()
 	{
 		GitCommitWindow.Init();
@@ -151,7 +151,7 @@ public class GitMenuCommands : MonoBehaviour
 	[MenuItem("Git/Test")]
 	static void TestFunc ()
 	{
-		Debug.Log (GitSystem.RunGitCmd ("config --get core.autocrlf"));
+//		Debug.Log (GitSystem.RunGitCmd ("config --unset core.worktree"));
 	}
 
 	/* **** Git Help **** */
