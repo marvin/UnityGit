@@ -150,7 +150,7 @@ public class GitSystem : Editor
 	{
 		if ( IsRemoteLocal(remoteName) )
 		{
-			string feedback = RunGitCmd("push --verbose --progress --porcelain " + remoteName + " " + GetCurrentBranch());
+			string feedback = RunGitCmd("push -v --progress --porcelain " + remoteName + " " + GetCurrentBranch());
 
 			if ( feedback.Contains("[rejected]") )
 				Debug.LogError("Push error: " + feedback + "\n\nTry fetch or pull first.");
