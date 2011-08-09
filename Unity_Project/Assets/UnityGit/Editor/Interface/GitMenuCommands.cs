@@ -91,6 +91,20 @@ public class GitMenuCommands : MonoBehaviour
 	}
 
 
+	[MenuItem ("Git/GC/Execute")]
+	static void GCNormal()
+	{
+		Debug.Log(GitSystem.RunGitCmd("gc"));
+	}
+
+
+	[MenuItem ("Git/GC/Auto")]
+	static void GCAuto()
+	{
+		Debug.Log(GitSystem.RunGitCmd("gc --auto"));
+	}
+
+
 	[MenuItem ("Git/Cleanup/Untracked")]
 	static void CleanupUntracked()
 	{
@@ -125,6 +139,43 @@ public class GitMenuCommands : MonoBehaviour
 	}
 
 
+	/* **** Settings **** */
+
+	// === GC (Garbage Collection) === //
+
+	[MenuItem("Git/Settings/GC/Set gc auto value")]
+	static void AutoGCValue ()
+	{
+		GitValueSettingWindow.Init("GC Auto Value", "gc.auto");
+	}
+
+
+	// === Pack Size Limit === //
+
+	[MenuItem("Git/Settings/Pack/Set pack size limit")]
+	static void SetPackSize ()
+	{
+		GitValueSettingWindow.Init("Pack size limit", "pack.packSizeLimit");
+	}
+
+
+	[MenuItem("Git/Settings/Pack/Get pack size limit")]
+	static void GetPackSize ()
+	{
+		Debug.Log("Pack size limit: " + GitSystem.RunGitCmd ("config pack.packSizeLimit"));
+	}
+
+
+	[MenuItem("Git/Settings/GC/Revert auto value to 6700")]
+	static void Auto6700 ()
+	{
+		GitSystem.RunGitCmd ("config gc.auto 6700");
+		Debug.Log ("Auto value set to 6700");
+	}
+
+
+	// === CRLF (Carriage Return / Line Feed) === //
+
 	[MenuItem("Git/Settings/CRLF/Show current mode")]
 	static void ShowCRLF ()
 	{
@@ -148,11 +199,21 @@ public class GitMenuCommands : MonoBehaviour
 	}
 
 
-	[MenuItem("Git/Test")]
-	static void TestFunc ()
+	[MenuItem("Git/Settings/CRLF/Auto CRLF On (Global)")]
+	static void GlobalAutoCRLFOn ()
 	{
-//		Debug.Log (GitSystem.RunGitCmd ("config --unset core.worktree"));
+		GitSystem.RunGitCmd ("config --global core.autocrlf true");
+		ShowCRLF();
 	}
+
+
+	[MenuItem("Git/Settings/CRLF/Auto CRLF Off (Global)")]
+	static void GlobalAutoCRLFOff ()
+	{
+		GitSystem.RunGitCmd ("config --global core.autocrlf false");
+		ShowCRLF();
+	}
+
 
 	/* **** Git Help **** */
 
@@ -160,5 +221,14 @@ public class GitMenuCommands : MonoBehaviour
 	static void ShowGitHelp ()
 	{
 		GitSystem.RunGitCmd ("help git");
+	}
+
+
+	/* **** Test Function **** */
+
+	[MenuItem("Git/Test")]
+	static void TestFunc ()
+	{
+		Debug.Log(GitSystem.RunGitCmd ("config gc.auto"));
 	}
 }

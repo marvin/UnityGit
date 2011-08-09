@@ -36,7 +36,6 @@ public class GitPushWindow : EditorWindow
 		if ( GUILayout.Button("Push", GUILayout.MaxWidth(100)) )
 		{
 			GitSystem.Push(remotes[remoteSelection]);
-			Close();
 		}
 	}
 }

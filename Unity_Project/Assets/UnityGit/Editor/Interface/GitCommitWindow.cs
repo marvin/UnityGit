@@ -50,6 +50,7 @@ public class GitCommitWindow : EditorWindow
 
 
 	Vector2 scrollPosition = Vector2.zero;
+	int lastSelectedIndex = -1;
 
 	void OnGUI()
 	{
@@ -57,25 +58,59 @@ public class GitCommitWindow : EditorWindow
 		{
 			Color baseContentColor = GUI.contentColor;
 
-			scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.MaxHeight(250));
+			scrollPosition = GUILayout.BeginScrollView(scrollPosition);
 			GUI.contentColor = Color.cyan;
 			for ( int i = 0; i < modifiedFiles.Length; i++ )
 			{
+				bool prevValue = commitModifiedFiles[i];
+
 				commitModifiedFiles[i] = GUILayout.Toggle(commitModifiedFiles[i], modifiedFiles[i]);
+
+				if ( prevValue != commitModifiedFiles[i] )
+				{
+					if ( commitModifiedFiles[i] )
+						lastSelectedIndex = i;
+					else
+						lastSelectedIndex = -1;
+				}
 			}
 
 			GUI.contentColor = baseContentColor;
 			for ( int i = 0; i < untrackedFiles.Length; i++ )
 			{
+				bool prevValue = commitUntrackedFiles[i];
+
 				commitUntrackedFiles[i] = GUILayout.Toggle(commitUntrackedFiles[i], untrackedFiles[i]);
+
+				if ( prevValue != commitUntrackedFiles[i] )
+				{
+					if ( commitUntrackedFiles[i] )
+						lastSelectedIndex = i + modifiedFiles.Length;
+					else
+						lastSelectedIndex = -1;
+				}
 			}
 
 			GUI.contentColor = Color.red;
 			for ( int i = 0; i < deletedFiles.Length; i++ )
 			{
+				bool prevValue = commitDeletedFiles[i];
+
 				commitDeletedFiles[i] = GUILayout.Toggle(commitDeletedFiles[i], deletedFiles[i]);
+
+				if ( prevValue != commitDeletedFiles[i] )
+				{
+					if ( commitDeletedFiles[i] )
+						lastSelectedIndex = i + modifiedFiles.Length + commitUntrackedFiles.Length;
+					else
+						lastSelectedIndex = -1;
+				}
 			}
 			GUILayout.EndScrollView();
+
+			// TODO: Add shift key to select a range of files to commit
+			if ( Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) )
+				GUILayout.Label(lastSelectedIndex.ToString());
 
 			// Select All and None
 			GUI.contentColor = baseContentColor;
@@ -84,10 +119,10 @@ public class GitCommitWindow : EditorWindow
 			{
 				for ( int i = 0; i < commitModifiedFiles.Length; i++ )
 					commitModifiedFiles[i] = true;
-				
+
 				for ( int i = 0; i < commitUntrackedFiles.Length; i++ )
 					commitUntrackedFiles[i] = true;
-				
+
 				for ( int i = 0; i < commitDeletedFiles.Length; i++ )
 					commitDeletedFiles[i] = true;
 			}
@@ -95,10 +130,10 @@ public class GitCommitWindow : EditorWindow
 			{
 				for ( int i = 0; i < commitModifiedFiles.Length; i++ )
 					commitModifiedFiles[i] = false;
-				
+
 				for ( int i = 0; i < commitUntrackedFiles.Length; i++ )
 					commitUntrackedFiles[i] = false;
-				
+
 				for ( int i = 0; i < commitDeletedFiles.Length; i++ )
 					commitDeletedFiles[i] = false;
 			}
@@ -127,7 +162,8 @@ public class GitCommitWindow : EditorWindow
 				GUILayout.EndHorizontal();
 			}
 		}
-		else {
+		else
+		{
 			GUILayout.Label("Nothing to commit...");
 		}
 	}
