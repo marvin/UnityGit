@@ -148,7 +148,7 @@ public class GitSystem : Editor
 
 	public static void Push(string remoteName)
 	{
-		if ( IsRemoteLocal(remoteName) )
+//		if ( IsRemoteLocal(remoteName) )
 		{
 			string feedback = RunGitCmd("push -v --progress --porcelain " + remoteName + " " + GetCurrentBranch());
 
@@ -157,8 +157,8 @@ public class GitSystem : Editor
 			else
 				Debug.Log("Push " + feedback);
 		}
-		else
-			Debug.Log("Sorry, UnityGit can only push to a local git repo for now.");
+//		else
+//			Debug.Log("Sorry, UnityGit can only push to a local git repo for now.");
 	}
 
 
