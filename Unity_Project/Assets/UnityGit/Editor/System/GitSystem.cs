@@ -171,9 +171,10 @@ public class GitSystem : Editor
 
 	public static void Pull(string remoteName, CommandOutput outputDelegate)
 	{
-		if ( IsRemoteLocal(remoteName) )
+//		if ( IsRemoteLocal(remoteName) )
 		{
-			string feedback = RunGitCmd("pull " + remoteName + " " + GetCurrentBranch(), true, outputDelegate);
+			string feedback = RunGitCmd("pull " + remoteName + " " + GetCurrentBranch(), true);
+//			string feedback = RunGitCmd("pull " + remoteName + " " + GetCurrentBranch(), true, outputDelegate);
 
 			if ( feedback.Contains("Aborting") )
 			{
@@ -183,8 +184,8 @@ public class GitSystem : Editor
 			else
 				Debug.Log(feedback);
 		}
-		else
-			Debug.Log("Sorry, UnityGit can only pull from a local git repo for now.");
+//		else
+//			Debug.Log("Sorry, UnityGit can only pull from a local git repo for now.");
 	}
 
 
