@@ -9,7 +9,7 @@ public class GitMergeBranchWindow : EditorWindow
 {
 	public static GitMergeBranchWindow Instance { get; private set; }
 
-	int selection = 0;
+	int fromSelection = 0;
 	string[] branches = null;
 
 
@@ -18,7 +18,7 @@ public class GitMergeBranchWindow : EditorWindow
 		// Get existing open window or if none, make a new one:
 		Instance = EditorWindow.GetWindow<GitMergeBranchWindow>(true, "Git Merge Branch");
 
-		Instance.branches = GitSystem.GetBranchList(false);
+		Instance.branches = GitSystem.GetBranchList(true);
 	}
 
 
@@ -26,11 +26,11 @@ public class GitMergeBranchWindow : EditorWindow
 	{
 		if ( branches.Length > 0 )
 		{
-			selection = EditorGUILayout.Popup(selection, branches);
+			fromSelection = EditorGUILayout.Popup(fromSelection, branches);
 
 			if ( GUILayout.Button("Merge Branch", GUILayout.MaxWidth(100)) )
 			{
-				GitSystem.MergeBranch(branches[selection]);
+				GitSystem.MergeBranch(branches[fromSelection]);
 				Close();
 			}
 		}
