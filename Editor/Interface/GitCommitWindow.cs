@@ -23,6 +23,9 @@ public class GitCommitWindow : EditorWindow
 	{
 		int fileCount = 0;
 
+		if ( Instance != null )
+			Instance.Close();
+
 		// Get existing open window or if none, make a new one:
 		Instance = EditorWindow.GetWindow<GitCommitWindow>(true, "Git Commit");
 
@@ -59,8 +62,13 @@ public class GitCommitWindow : EditorWindow
 		{
 			Color baseContentColor = GUI.contentColor;
 			bool shiftDown = Event.current.shift;
+			bool valueChanged = false;
+			int selectedIndex = 0;
 
 			scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+
+			// === Modified Files === //
+
 			GUI.contentColor = Color.cyan;
 			for ( int i = 0; i < modifiedFiles.Length; i++ )
 			{
@@ -71,16 +79,11 @@ public class GitCommitWindow : EditorWindow
 				// Was this box just checked?
 				if ( prevValue != commitModifiedFiles[i] )
 				{
-					// Should we multi select / deselect?
+					valueChanged = true;
+
 					if ( shiftDown )
 					{
-						int start = (lastSelectedIndex < i) ? lastSelectedIndex : i;
-						int end = (lastSelectedIndex < i) ? i : lastSelectedIndex;
-
-						for ( int cur = start; cur < end; cur++ )
-						{
-							commitModifiedFiles[cur] = lastSelectedValue;
-						}
+						selectedIndex = i;
 					}
 					else
 					{
@@ -89,6 +92,8 @@ public class GitCommitWindow : EditorWindow
 					}
 				}
 			}
+
+			// === Untracked Files === //
 
 			GUI.contentColor = baseContentColor;
 			for ( int i = 0; i < untrackedFiles.Length; i++ )
@@ -100,11 +105,22 @@ public class GitCommitWindow : EditorWindow
 				// Was this box just checked?
 				if ( prevValue != commitUntrackedFiles[i] )
 				{
+					valueChanged = true;
 
-					lastSelectedIndex = i + modifiedFiles.Length;
-					lastSelectedValue = commitUntrackedFiles[i];
+					// Should we multi select / deselect?
+					if ( shiftDown )
+					{
+						selectedIndex = i + modifiedFiles.Length;
+					}
+					else
+					{
+						lastSelectedIndex = i + modifiedFiles.Length;
+						lastSelectedValue = commitUntrackedFiles[i];
+					}
 				}
 			}
+
+			// === Deleted Files === //
 
 			GUI.contentColor = Color.red;
 			for ( int i = 0; i < deletedFiles.Length; i++ )
@@ -115,11 +131,78 @@ public class GitCommitWindow : EditorWindow
 
 				if ( prevValue != commitDeletedFiles[i] )
 				{
-					lastSelectedIndex = i + modifiedFiles.Length + commitUntrackedFiles.Length;
-					lastSelectedValue = commitDeletedFiles[i];
+					valueChanged = true;
+
+					// Should we multi select / deselect?
+					if ( shiftDown )
+					{
+						selectedIndex = i + modifiedFiles.Length + commitUntrackedFiles.Length;
+					}
+					else
+					{
+						lastSelectedIndex = i + modifiedFiles.Length + commitUntrackedFiles.Length;
+						lastSelectedValue = commitDeletedFiles[i];
+					}
 				}
 			}
 			GUILayout.EndScrollView();
+
+			if ( valueChanged )
+			{
+				// Change the modified files
+				// Should we multi select / deselect?
+				if ( shiftDown )
+				{
+					int start = (lastSelectedIndex < selectedIndex) ? lastSelectedIndex : selectedIndex;
+					int end = (lastSelectedIndex < selectedIndex) ? selectedIndex : lastSelectedIndex;
+
+					start = Mathf.Clamp(start, 0, modifiedFiles.Length);
+					end = Mathf.Clamp(end, 0, modifiedFiles.Length);
+
+					for ( int cur = start; cur < end; cur++ )
+					{
+						commitModifiedFiles[cur] = lastSelectedValue;
+					}
+				}
+
+				// Change the untracked files
+				// Should we multi select / deselect?
+				if ( shiftDown )
+				{
+					int start = (lastSelectedIndex < selectedIndex) ? lastSelectedIndex : selectedIndex;
+					int end = (lastSelectedIndex < selectedIndex) ? selectedIndex : lastSelectedIndex;
+
+					start -= modifiedFiles.Length;
+					end -= modifiedFiles.Length;
+
+					start = Mathf.Clamp(start, 0, commitUntrackedFiles.Length);
+					end = Mathf.Clamp(end, 0, commitUntrackedFiles.Length);
+
+					for ( int cur = start; cur < end; cur++ )
+					{
+						commitUntrackedFiles[cur] = lastSelectedValue;
+					}
+				}
+
+				// Change the deleted files
+				// Should we multi select / deselect?
+				if ( shiftDown )
+				{
+					int start = (lastSelectedIndex < selectedIndex) ? lastSelectedIndex : selectedIndex;
+					int end = (lastSelectedIndex < selectedIndex) ? selectedIndex : lastSelectedIndex;
+
+					start -= modifiedFiles.Length + untrackedFiles.Length;
+					end -= modifiedFiles.Length + untrackedFiles.Length;
+
+					start = Mathf.Clamp(start, 0, deletedFiles.Length);
+					end = Mathf.Clamp(end, 0, deletedFiles.Length);
+
+					for ( int cur = start; cur < end; cur++ )
+					{
+						commitDeletedFiles[cur] = lastSelectedValue;
+					}
+				}
+			}
 
 			// Select All and None
 			GUI.contentColor = baseContentColor;
@@ -166,7 +249,7 @@ public class GitCommitWindow : EditorWindow
 				else if ( GUILayout.Button("Commit", GUILayout.MaxWidth(100)) )
 				{
 					DoCommit();
-					Close();
+					GitCommitWindow.Init();
 				}
 				GUILayout.EndHorizontal();
 			}
