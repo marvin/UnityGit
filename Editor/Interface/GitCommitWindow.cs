@@ -21,13 +21,19 @@ public class GitCommitWindow : EditorWindow
 
 	public static void Init ()
 	{
-		int fileCount = 0;
-
 		if ( Instance != null )
 			Instance.Close();
 
 		// Get existing open window or if none, make a new one:
 		Instance = EditorWindow.GetWindow<GitCommitWindow>(true, "Git Commit");
+
+		Instance.InitFiles(true);
+	}
+
+
+	void InitFiles(bool initSelect)
+	{
+		int fileCount = 0;
 
 		Instance.modifiedFiles = GitSystem.GetModifiedFilesList();
 		Instance.untrackedFiles = GitSystem.GetUntrackedFilesList();
@@ -37,11 +43,14 @@ public class GitCommitWindow : EditorWindow
 		Instance.commitUntrackedFiles = new bool[Instance.untrackedFiles.Length];
 		Instance.commitDeletedFiles = new bool[Instance.deletedFiles.Length];
 
-		for ( int i = 0; i < Instance.commitModifiedFiles.Length; i++ )
-			Instance.commitModifiedFiles[i] = true;
+		if ( initSelect )
+		{
+			for ( int i = 0; i < Instance.commitModifiedFiles.Length; i++ )
+				Instance.commitModifiedFiles[i] = true;
 
-		for ( int i = 0; i < Instance.commitDeletedFiles.Length; i++ )
-			Instance.commitDeletedFiles[i] = true;
+			for ( int i = 0; i < Instance.commitDeletedFiles.Length; i++ )
+				Instance.commitDeletedFiles[i] = true;
+		}
 
 		fileCount = Instance.modifiedFiles.Length;
 		fileCount += Instance.untrackedFiles.Length;
@@ -233,7 +242,7 @@ public class GitCommitWindow : EditorWindow
 
 			GUILayout.Label("");
 			GUILayout.Label("Commit message:");
-			commitMessage = GUILayout.TextArea(commitMessage, GUILayout.MinHeight(45));
+			commitMessage = GUILayout.TextArea(commitMessage, GUILayout.MinHeight(100));
 			commitMessage = commitMessage.Replace("\"", "");
 			commitMessage = commitMessage.Replace("\'", "");
 
@@ -249,7 +258,8 @@ public class GitCommitWindow : EditorWindow
 				else if ( GUILayout.Button("Commit", GUILayout.MaxWidth(100)) )
 				{
 					DoCommit();
-					GitCommitWindow.Init();
+					InitFiles(false);
+					commitMessage = "";
 				}
 				GUILayout.EndHorizontal();
 			}
