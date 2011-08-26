@@ -1,0 +1,1 @@
+This project is an attempt to make a user friendly interface between Unity and Git.
