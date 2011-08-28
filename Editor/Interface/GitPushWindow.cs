@@ -11,6 +11,10 @@ public class GitPushWindow : EditorWindow
 	int remoteSelection = 0;
 	string[] remotes;
 
+	bool progressMode = false;
+	string progressString = "";
+
+
 	public static void Init ()
 	{
 		// Get existing open window or if none, make a new one:
@@ -28,14 +32,35 @@ public class GitPushWindow : EditorWindow
 	}
 
 
+	void Update()
+	{
+		if ( progressMode )
+			Repaint();
+	}
+
+
 	void OnGUI()
 	{
-		remoteSelection = EditorGUILayout.Popup(remoteSelection, remotes);
-		GitSystem.currentRemote = remotes[remoteSelection];
-
-		if ( GUILayout.Button("Push", GUILayout.MaxWidth(100)) )
+		if ( progressMode )
 		{
-			GitSystem.Push(remotes[remoteSelection]);
+			GUILayout.Label(progressString);
 		}
+		else
+		{
+			remoteSelection = EditorGUILayout.Popup(remoteSelection, remotes);
+			GitSystem.currentRemote = remotes[remoteSelection];
+
+			if ( GUILayout.Button("Push", GUILayout.MaxWidth(100)) )
+			{
+				GitSystem.Push(remotes[remoteSelection], ProgressReceiver);
+				progressMode = true;
+			}
+		}
+	}
+
+
+	void ProgressReceiver(string progressUpdate, bool isDone)
+	{
+		progressString += progressUpdate;
 	}
 }

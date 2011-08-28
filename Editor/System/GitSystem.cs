@@ -42,8 +42,11 @@ public class GitSystem : Editor
 
 	static string GetRepoPath ()
 	{
-		string[] locationParts = Application.dataPath.Split ('/');
-		
+		Object selection = Selection.activeObject;
+		string startPath = Application.dataPath;
+		string selectionPath = Selection.activeObject == null ? "" : AssetDatabase.GetAssetPath(selection).Substring(6);
+		string[] locationParts = (startPath + selectionPath).Split ('/');
+
 		for (int o = 0; o < locationParts.Length; o++)
 		{
 			string tryPath = "";
@@ -52,7 +55,7 @@ public class GitSystem : Editor
 			{
 				tryPath += locationParts[i] + "/";
 			}
-			
+
 			if (Directory.Exists (tryPath + ".git"))
 			{
 				tryPath = tryPath.Remove(tryPath.Length-1);
@@ -146,16 +149,14 @@ public class GitSystem : Editor
 
 	/* **** Push **** */
 
-	public static void Push(string remoteName)
+	public static void Push(string remoteName, CommandOutput outputDelegate)
 	{
 		if ( IsRemoteLocal(remoteName) )
 		{
-			string feedback = RunGitCmd("push -v --progress --porcelain " + remoteName + " " + GetCurrentBranch());
+			string feedback = RunGitCmd("push -v --progress --porcelain " + remoteName + " " + GetCurrentBranch(), outputDelegate);
 
 			if ( feedback.Contains("[rejected]") )
 				Debug.LogError("Push error: " + feedback + "\n\nTry fetch or pull first.");
-			else
-				Debug.Log("Push " + feedback);
 		}
 		else
 			Debug.Log("Sorry, UnityGit can only push to a local git repo for now.");
@@ -180,8 +181,6 @@ public class GitSystem : Editor
 				Debug.LogError(feedback);
 				Debug.LogError("Error pulling!");
 			}
-			else
-				Debug.Log(feedback);
 		}
 		else
 			Debug.Log("Sorry, UnityGit can only pull from a local git repo for now.");
@@ -576,6 +575,7 @@ public class GitSystem : Editor
 		if ( proc != null )
 		{
 			Debug.LogWarning("You must wait for previous processes to finish!");
+			return "";
 		}
 
 		if ( cmd != "" )
@@ -590,16 +590,16 @@ public class GitSystem : Editor
 
 //			startInfo.Arguments = "cd.. && cd.. && " + command;
 			startInfo.Arguments = command;
-		
+
 			startInfo.UseShellExecute = false;
 			startInfo.RedirectStandardInput = true;
 			startInfo.RedirectStandardOutput = true;
 			startInfo.CreateNoWindow = true;
-		
+
 			proc.StartInfo = startInfo;
-		
+
 			proc.Start ();
-		
+
 			if ( outputDelegate == null )
 			{
 				StreamReader streamReader = proc.StandardOutput;
@@ -609,7 +609,7 @@ public class GitSystem : Editor
 					Thread.Sleep (0);
 
 					result = streamReader.ReadToEnd ();
-		
+
 					proc.Close();
 					proc = null;
 
@@ -657,7 +657,7 @@ public class GitSystem : Editor
 		}
 		else
 			outputDelegate("", true);
-		
+
 		proc.Close();
 		proc = null;
 	}

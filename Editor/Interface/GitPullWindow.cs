@@ -35,17 +35,24 @@ public class GitPullWindow : EditorWindow
 	}
 
 
+	void Update()
+	{
+		if ( progressMode )
+			Repaint();
+
+		if ( doPostPull )
+		{
+			doPostPull = false;
+			GitSystem.PostPull();
+		}
+	}
+
+
 	void OnGUI()
 	{
 		if ( progressMode )
 		{
 			GUILayout.Label(progressString);
-
-			if ( doPostPull )
-			{
-				doPostPull = false;
-				GitSystem.PostPull();
-			}
 		}
 		else
 		{
@@ -54,8 +61,11 @@ public class GitPullWindow : EditorWindow
 
 			if ( GUILayout.Button("Pull", GUILayout.MaxWidth(100)) )
 			{
-				GitSystem.RunGitCmd("reset --hard");
-				GitSystem.Pull(remotes[remoteSelection]);
+				if ( resetHard )
+					GitSystem.RunGitCmd("reset --hard");
+
+				GitSystem.Pull(remotes[remoteSelection], ProgressReceiver);
+				progressMode = true;
 			}
 
 			resetHard = GUILayout.Toggle(resetHard, "Hard Reset (Delete all uncomitted files first)");
