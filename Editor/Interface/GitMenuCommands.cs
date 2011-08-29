@@ -222,13 +222,4 @@ public class GitMenuCommands : MonoBehaviour
 	{
 		GitSystem.RunGitCmd ("help git");
 	}
-
-
-	/* **** Test Function **** */
-
-	[MenuItem("Git/Test")]
-	static void TestFunc ()
-	{
-		Debug.Log(GitSystem.RunGitCmd ("config gc.auto"));
-	}
 }
